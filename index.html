@@ -357,16 +357,6 @@
   .tx-agent { font-size: 11px; color: var(--gray-400); }
   .tx-meta { font-size: 11px; color: var(--gray-600); font-weight: 500; }
 
-  .tx-footer { 
-    display: flex; 
-    justify-content: space-between; 
-    font-size: 11px; 
-    color: var(--gray-400); 
-    margin-top: 10px; 
-    padding-top: 10px; 
-    border-top: 1px solid var(--gray-200); 
-  }
-
   .tx-detail-overlay {
     display: none;
     position: fixed;
@@ -413,6 +403,19 @@
   .detail-row:last-child { border-bottom: none; }
   .detail-label { color: var(--gray-400); }
   .detail-value { font-weight: 500; text-align: right; max-width: 60%; }
+
+  .doc-check {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    margin: 0 2px;
+    font-size: 10px;
+    text-align: center;
+    line-height: 16px;
+  }
+
+  .doc-yes { background: #e8f5e9; color: #2e7d32; }
+  .doc-no { background: #fce4ec; color: #c62828; }
 
   .close-btn {
     position: absolute;
@@ -613,13 +616,16 @@
 </head>
 <body>
 
+<!-- HEADER -->
 <header class="app-header">
   <div class="header-logo">CRG<span>.</span></div>
   <div class="header-date" id="headerDate"></div>
 </header>
 
+<!-- MAIN CONTENT -->
 <main class="main">
 
+  <!-- HOME -->
   <div id="page-home" class="page active">
     <div class="home-hero">
       <div class="home-greeting">Good morning</div>
@@ -692,17 +698,20 @@
         <div class="ann-body">All agents: please ensure closing packets are submitted within 5 days of close. Reach out to the TC team with any questions.</div>
       </div>
     </div>
-  </div>
-<div class="section-title">Calendar</div>
-<div style="padding: 0 16px 20px;">
-  <iframe 
-    src="https://calendar.google.com/calendar/embed?src=c_f33122657a99025e777b0b8e88b8a99964039423e596283c13d37c226f16825f%40group.calendar.google.com"
-    style="border:0; width:100%; height:400px;"
-    frameborder="0"
-    scrolling="no">
-  </iframe>
-</div>
 
+    <!-- MOVED CALENDAR HERE -->
+    <div class="section-title" style="padding: 0 16px;">Calendar</div>
+    <div style="padding: 0 16px 20px;">
+      <iframe 
+        src="https://calendar.google.com/calendar/embed?src=c_f33122657a99025e777b0b8e88b8a99964039423e596283c13d37c226f16825f%40group.calendar.google.com"
+        style="border:0; width:100%; height:400px;"
+        frameborder="0"
+        scrolling="no">
+      </iframe>
+    </div>
+  </div>
+
+  <!-- TRANSACTIONS -->
   <div id="page-transactions" class="page">
     <div class="page-header">
       <h1>Transactions</h1>
@@ -716,6 +725,7 @@
     <div class="transaction-list" id="txList"></div>
   </div>
 
+  <!-- DIRECTORY -->
   <div id="page-directory" class="page">
     <div class="page-header">
       <h1>Agent Directory</h1>
@@ -725,10 +735,13 @@
       <input type="text" class="search-input" placeholder="Search agents..." id="agentSearch" oninput="filterAgents()">
     </div>
     <div class="agent-grid" id="agentList"></div>
+    
+    <!-- ADDED VA TEAM CONTAINER HERE -->
     <div class="section-title" style="margin: 16px;">Operations & VA Team</div>
     <div class="agent-grid" id="vaList"></div>
   </div>
 
+  <!-- TRAINING -->
   <div id="page-training" class="page">
     <div class="page-header">
       <h1>Training & Support</h1>
@@ -794,6 +807,7 @@
     </div>
   </div>
 
+  <!-- FORMS -->
   <div id="page-forms" class="page">
     <div class="page-header">
       <h1>Forms & Documents</h1>
@@ -832,36 +846,36 @@
         <a class="form-link" href="#" onclick="return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="form-link-name">New Agent Onboarding Checklist</span><svg class="form-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg></a>
         <a class="form-link" href="#" onclick="return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="form-link-name">Agency Disclosure Form (K)</span><svg class="form-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg></a>
         <a class="form-link" href="#" onclick="return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="form-link-name">LBP Disclosure</span><svg class="form-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="9 18 15 12 9 6"/></svg></a>
+        
+        <!-- MOVED EXTERNAL FORMS HERE -->
+        <a class="form-link" href="https://forms.gle/df6HdbvhDQyAFDyY6" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <span class="form-link-name">Accepted Offer & Closing Form</span>
+        </a>
+        <a class="form-link" href="https://forms.gle/73fvkEeF1paUSdrp7" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <span class="form-link-name">Transaction Update Form</span>
+        </a>
+        <a class="form-link" href="https://forms.gle/EQCk9zpgBrC6eceY8" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <span class="form-link-name">Closing Transaction Form</span>
+        </a>
       </div>
     </div>
   </div>
 
-  <a class="form-link" href="https://forms.gle/df6HdbvhDQyAFDyY6" target="_blank" style="margin: 0 16px;">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-    <polyline points="14 2 14 8 20 8"/>
-  </svg>
-  <span class="form-link-name">Accepted Offer & Closing Form</span>
-</a>
-
-<a class="form-link" href="https://forms.gle/73fvkEeF1paUSdrp7" target="_blank" style="margin: 6px 16px;">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-    <polyline points="14 2 14 8 20 8"/>
-  </svg>
-  <span class="form-link-name">Transaction Update Form</span>
-</a>
-
-<a class="form-link" href="https://forms.gle/EQCk9zpgBrC6eceY8" target="_blank" style="margin: 6px 16px 20px;">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-    <polyline points="14 2 14 8 20 8"/>
-  </svg>
-  <span class="form-link-name">Closing Transaction Form</span>
-</a>
-
 </main>
 
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button class="nav-item active" onclick="navigate('home')" id="nav-home">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -885,6 +899,7 @@
   </button>
 </nav>
 
+<!-- TRANSACTION DETAIL OVERLAY -->
 <div class="tx-detail-overlay" id="txDetail" onclick="closeDetail(event)">
   <div class="tx-detail-sheet" id="txDetailSheet">
     <button class="close-btn" onclick="closeDetail()">×</button>
@@ -896,14 +911,49 @@
 </div>
 
 <script>
-// =======================
-// GLOBAL STATE
-// =======================
-let allTransactions = [];
-let activeFilter = "All";
-let currentPage = 'home';
+// ===== DATA =====
+const transactions = [
+  {agent:"Carolyn Conner",email:"carolyn2keys@gmail.com",client:"Lameka Dawson",address:"18736 Huntington Ave, Harper Woods",stage:"Buyer: Lost / Withdrawn",type:"Buyer",propType:"Single-Family",submitted:"2/6/2026",closing:"2/16/2026",price:"$189,900",comm:"3%",commission:"$5,697",lender:"",docs:{ba:true,ad:false,pa:true,lbp:true,sd:true,emd:false}},
+  {agent:"Carolyn Conner",email:"carolyn2keys@gmail.com",client:"Jacob Cabarrubia",address:"4059 High Street, Ecorse",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"2/22/2026",closing:"4/3/2026",price:"$100,000",comm:"3%",commission:"$3,000",lender:"",docs:{ba:false,ad:true,pa:true,lbp:true,sd:true,emd:true}},
+  {agent:"Carolyn Conner",email:"carolyn2keys@gmail.com",client:"Mariela Arellanes",address:"5362 Allendale Street, Detroit",stage:"Buyer: Lost / Withdrawn",type:"Buyer",propType:"Single-Family",submitted:"3/19/2026",closing:"4/17/2026",price:"$78,000",comm:"3%",commission:"$2,340",lender:"The Mortgage Link",docs:{ba:true,ad:true,pa:true,lbp:true,sd:true,emd:false}},
+  {agent:"Dana Lawrence",email:"danasimara@gmail.com",client:"Mensah Brown",address:"9336 Sussex Street",stage:"Buyer: Lost / Withdrawn",type:"Buyer",propType:"Single-Family",submitted:"3/9/2026",closing:"",price:"$52,000",comm:"",commission:"$0",lender:"",docs:{ba:false,ad:false,pa:true,lbp:false,sd:false,emd:false}},
+  {agent:"Dana Lawrence",email:"danasimara@gmail.com",client:"Eman & Ziad Ziad",address:"8737 Smart Street",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"3/9/2026",closing:"3/9/2026",price:"$90,000",comm:"3%",commission:"$2,700",lender:"",docs:{ba:false,ad:true,pa:true,lbp:true,sd:true,emd:false}},
+  {agent:"Dana Lawrence",email:"danasimara@gmail.com",client:"Dominique Holcomb",address:"15780 Lesure St",stage:"Buyer: Under Contract / Pending",type:"Buyer",propType:"Single-Family",submitted:"3/16/2026",closing:"5/8/2026",price:"$139,900",comm:"3%",commission:"$4,197",lender:"",docs:{ba:false,ad:true,pa:true,lbp:true,sd:true,emd:false}},
+  {agent:"Dana Politi-Rashid",email:"hello@homesbydpr.com",client:"Toni Henry",address:"16801 Chandler Park Dr",stage:"Seller: Closed",type:"Seller",propType:"Single-Family",submitted:"11/13/2025",closing:"1/5/2026",price:"$265,000",comm:"3%",commission:"$7,950",lender:"",docs:{ba:true,ad:true,pa:true,lbp:true,sd:true,emd:true}},
+  {agent:"Dana Politi-Rashid",email:"hello@homesbydpr.com",client:"Noah Ash",address:"16224 Washburn Street, Detroit",stage:"Buyer: Under Contract / Pending",type:"Buyer",propType:"Single-Family",submitted:"3/11/2026",closing:"5/8/2026",price:"",comm:"",commission:"$0",lender:"FirstState",docs:{ba:true,ad:true,pa:true,lbp:true,sd:true,emd:false}},
+  {agent:"Dana Politi-Rashid",email:"hello@homesbydpr.com",client:"Susan Lawrence",address:"23151 Schroeder, Eastpointe",stage:"Buyer: Under Contract / Pending",type:"Buyer",propType:"Single-Family",submitted:"4/13/2026",closing:"5/12/2026",price:"$172,500",comm:"6%",commission:"$10,350",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"LaTonya Clay",address:"15425 Sorrento Ave",stage:"Seller: Closed",type:"Seller",propType:"Single-Family",submitted:"1/6/2026",closing:"2/11/2026",price:"$150,000",comm:"3%",commission:"$4,500",lender:"",docs:{ba:false,ad:true,pa:true,lbp:true,sd:true,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Traci Rizzo",address:"4503 Bishop St",stage:"Seller: Closed",type:"Seller",propType:"Single-Family",submitted:"1/6/2026",closing:"4/3/2026",price:"$158,000",comm:"3%",commission:"$4,740",lender:"",docs:{ba:false,ad:false,pa:true,lbp:true,sd:true,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Deandra Morris",address:"24503 Crocker Blvd",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"1/6/2026",closing:"2/9/2026",price:"$255,000",comm:"3%",commission:"$7,650",lender:"Michigan First Mortgage",docs:{ba:true,ad:true,pa:true,lbp:true,sd:true,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Mary Jackson",address:"207 Summit Street",stage:"Seller: Coming Soon",type:"Seller",propType:"Single-Family",submitted:"1/8/2026",closing:"",price:"$110,000",comm:"",commission:"$0",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Jesiane Fernandes",address:"5784 Whittier Avenue",stage:"Seller: Active",type:"Seller",propType:"Single-Family",submitted:"1/8/2026",closing:"",price:"$182,000",comm:"",commission:"$0",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Carla Wilson",address:"19612 Dale Street",stage:"Seller: Closed",type:"Buyer",propType:"Single-Family",submitted:"12/1/2025",closing:"4/23/2026",price:"$135,000",comm:"3%",commission:"$4,050",lender:"",docs:{ba:true,ad:true,pa:true,lbp:true,sd:false,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Daniel Massey",address:"16874 Coyle Street",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"2/27/2026",closing:"4/24/2026",price:"$180,000",comm:"3%",commission:"$5,400",lender:"Flagstar",docs:{ba:true,ad:true,pa:true,lbp:true,sd:true,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Alicia Poe",address:"5280 Proctor Street, Detroit",stage:"Buyer: Lost / Withdrawn",type:"Buyer",propType:"Single-Family",submitted:"2/27/2026",closing:"4/25/2026",price:"$120,000",comm:"3%",commission:"$3,600",lender:"",docs:{ba:false,ad:true,pa:true,lbp:true,sd:true,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Starks DS Investments LLC",address:"18555 Edinborough Rd",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"3/16/2026",closing:"4/6/2026",price:"$70,000",comm:"3%",commission:"$2,100",lender:"Bridge Gap Capital",docs:{ba:false,ad:true,pa:true,lbp:true,sd:true,emd:true}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Tayzney Baker",address:"25934 Jeanette Street, Roseville",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"3/23/2026",closing:"4/7/2026",price:"$57,000",comm:"3%",commission:"$1,710",lender:"ncb",docs:{ba:false,ad:true,pa:true,lbp:false,sd:false,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Mariela Arellanes",address:"7007 Joy Road, Detroit",stage:"Buyer: Under Contract / Pending",type:"Buyer",propType:"Single-Family",submitted:"4/4/2026",closing:"5/13/2026",price:"$85,000",comm:"3%",commission:"$2,550",lender:"",docs:{ba:true,ad:true,pa:true,lbp:true,sd:true,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Ernesto Losada",address:"8212 E Lantz St",stage:"Seller: Under Contract / Pending",type:"Seller",propType:"Single-Family",submitted:"4/13/2026",closing:"5/8/2026",price:"$60,000",comm:"7%",commission:"$4,200",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"LaTonya Clay",address:"22773 Brittany Ave",stage:"Seller: Active",type:"Seller",propType:"Single-Family",submitted:"",closing:"",price:"$125,000",comm:"6%",commission:"$7,500",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Kenny Fountain",address:"10030 Hartwell Street",stage:"Seller: Active",type:"Seller",propType:"Single-Family",submitted:"",closing:"",price:"$87,000",comm:"6%",commission:"$5,220",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Kenny Fountain",address:"19445 Montrose Street",stage:"Seller: Price Change",type:"Seller",propType:"Single-Family",submitted:"",closing:"",price:"$119,000",comm:"6%",commission:"$7,140",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Carl & Ashley Kline",address:"53 Eastman St, Mt. Clemens",stage:"Seller: Price Change",type:"Seller",propType:"Single-Family",submitted:"",closing:"",price:"$237,000",comm:"6%",commission:"$14,220",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+  {agent:"Marnette Cobb",email:"marnette@mycobbrealty.com",client:"Brandy Glenn",address:"3985 Somerset Avenue, Detroit",stage:"Seller: Active",type:"Seller",propType:"Single-Family",submitted:"",closing:"",price:"$110,000",comm:"6%",commission:"$6,600",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+  {agent:"Tiffani Green",email:"soldxtiffani@gmail.com",client:"Lashante Coleman",address:"11340 Fisher Avenue",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"3/17/2026",closing:"4/23/2026",price:"$1,100",comm:"",commission:"$0",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+  {agent:"Tyrone Johnson",email:"Ty@antoinemaison.com",client:"David Sanford",address:"15826 Coram St, Detroit",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"12/19/2025",closing:"1/13/2026",price:"$127,500",comm:"3%",commission:"$3,825",lender:"NMHL",docs:{ba:true,ad:true,pa:true,lbp:true,sd:true,emd:true}},
+  {agent:"Tyrone Johnson",email:"Ty@antoinemaison.com",client:"Kevin Charette",address:"5960 Chalmers St, Detroit",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"12/19/2025",closing:"1/13/2026",price:"$110,000",comm:"3%",commission:"$3,300",lender:"Proper",docs:{ba:true,ad:true,pa:true,lbp:true,sd:true,emd:true}},
+  {agent:"Tyrone Johnson",email:"Ty@antoinemaison.com",client:"Khalia Johnson",address:"11386 Grayfield Ave, Redford",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"1/22/2026",closing:"2/6/2026",price:"$147,000",comm:"3%",commission:"$4,410",lender:"NMHL",docs:{ba:true,ad:true,pa:true,lbp:true,sd:true,emd:true}},
+  {agent:"Tyrone Johnson",email:"Ty@antoinemaison.com",client:"Kevin Charette",address:"14011 Ohio St, Detroit",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"2/6/2026",closing:"3/9/2026",price:"$115,000",comm:"3%",commission:"$3,450",lender:"",docs:{ba:true,ad:true,pa:true,lbp:true,sd:true,emd:true}},
+  {agent:"Tyrone Johnson",email:"Ty@antoinemaison.com",client:"Kevin Charette",address:"9952 Cascade St, Detroit",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"2/6/2026",closing:"4/3/2026",price:"$105,000",comm:"3%",commission:"$3,150",lender:"",docs:{ba:true,ad:true,pa:true,lbp:true,sd:true,emd:true}},
+  {agent:"Tyrone Johnson",email:"Ty@antoinemaison.com",client:"Renee Jenkins",address:"5794 Dickerson Ave, Detroit",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"2/22/2026",closing:"2/25/2026",price:"$118,000",comm:"2.5%",commission:"$2,950",lender:"",docs:{ba:false,ad:true,pa:true,lbp:true,sd:true,emd:false}},
+  {agent:"Tyrone Johnson",email:"ty@tycobbrealty.com",client:"Keisha Howard",address:"5093 Garland St, Detroit",stage:"Buyer: Under Contract / Pending",type:"Buyer",propType:"Single-Family",submitted:"3/13/2026",closing:"",price:"$15,000",comm:"",commission:"$1,000",lender:"",docs:{ba:false,ad:true,pa:true,lbp:false,sd:false,emd:false}},
+  {agent:"Tyrone Johnson",email:"ty@tycobbrealty.com",client:"Ayad Albadani",address:"8704 Smart St, Detroit",stage:"Buyer: Under Contract / Pending",type:"Buyer",propType:"Single-Family",submitted:"4/4/2026",closing:"5/7/2026",price:"$160,000",comm:"",commission:"$0",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+  {agent:"Tyrone Johnson",email:"ty@tycobbrealty.com",client:"Ahmed Saeed",address:"8250 Esper St, Detroit",stage:"Buyer: Closed",type:"Buyer",propType:"Single-Family",submitted:"4/12/2026",closing:"4/24/2026",price:"$70,000",comm:"3%",commission:"$6,000",lender:"Cash",docs:{ba:true,ad:true,pa:true,lbp:true,sd:true,emd:false}},
+  {agent:"Tyrone Johnson",email:"ty@tycobbrealty.com",client:"Kevin Charette",address:"14961 Strathmoor Street",stage:"Buyer: Under Contract / Pending",type:"Buyer",propType:"Single-Family",submitted:"4/8/2026",closing:"5/6/2026",price:"$110,000",comm:"3%",commission:"$3,300",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+  {agent:"Tyrone Johnson",email:"ty@tycobbrealty.com",client:"Jules Milstead & Latoya Freeman",address:"6061 15th St, Detroit",stage:"Buyer: Under Contract / Pending",type:"Buyer",propType:"Single-Family",submitted:"4/21/2026",closing:"5/15/2026",price:"$163,000",comm:"3%",commission:"$4,890",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+  {agent:"Tyrone Johnson",email:"ty@tycobbrealty.com",client:"Isaiah Fredrick",address:"19336 Binder Street, Detroit",stage:"Buyer: Under Contract / Pending",type:"Buyer",propType:"Single-Family",submitted:"4/22/2026",closing:"5/15/2026",price:"$62,000",comm:"3%",commission:"$1,860",lender:"",docs:{ba:false,ad:false,pa:false,lbp:false,sd:false,emd:false}},
+];
 
-// ===== AGENTS DATA =====
 const agents = [
   {name:"Marnette Cobb",email:"marnette@mycobbrealty.com",phone:"3134431630",since:"6/1/2024",initials:"MC"},
   {name:"Tyrone Johnson",email:"ty@tycobbrealty.com",phone:"",since:"",initials:"TJ"},
@@ -925,207 +975,121 @@ const vaTeam = [
   { name: "Jessan Kyla Cinco", role: "Social Media Manager", email: "social@mycobbrealty.com" }
 ];
 
-// =======================
-// HEADER DATE
-// =======================
-const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const now = new Date();
-document.getElementById('headerDate').textContent = days[now.getDay()] + ' ' + months[now.getMonth()] + ' ' + now.getDate();
-
-// =======================
-// LOAD DATA (GOOGLE SHEETS)
-// =======================
-async function loadTransactions() {
-  const url = "https://opensheet.elk.sh/1XxhhUaIQD_Ovwn6T-dY8v9ExX0D3Qw52385G1tJXKTg/1";
-
-  try {
-    const res = await fetch(url + "?t=" + new Date().getTime());
-    const data = await res.json();
-
-    allTransactions = data.filter(item => item["Client Name"]);
-
-    updateStats(allTransactions);
-    renderFilters();
-    filterTransactions();
-
-  } catch (err) {
-    console.error("Sheet load error:", err);
-  }
+// ===== STAGE BADGE =====
+function getStageBadge(stage) {
+  const s = stage.toLowerCase();
+  if (s.includes('closed') && !s.includes('coming')) return {cls:'stage-closed',label:'Closed'};
+  if (s.includes('pending') || s.includes('under contract')) return {cls:'stage-pending',label:'Pending'};
+  if (s.includes('active')) return {cls:'stage-active',label:'Active'};
+  if (s.includes('lost') || s.includes('withdrawn')) return {cls:'stage-lost',label:'Lost'};
+  if (s.includes('coming soon')) return {cls:'stage-coming',label:'Coming Soon'};
+  if (s.includes('offer')) return {cls:'stage-offer',label:'Offer Out'};
+  if (s.includes('price')) return {cls:'stage-price',label:'Price Change'};
+  return {cls:'stage-active',label:stage};
 }
 
-// =======================
-// STATS
-// =======================
-function updateStats(data) {
-  let active = 0, pending = 0, closed = 0;
-
-  data.forEach(item => {
-    const stage = (item["Stage"] || "").toLowerCase();
-
-    if (stage.includes("active") || stage.includes("coming") || stage.includes("offer") || stage.includes("price")) active++;
-    else if (stage.includes("pending") || stage.includes("under contract")) pending++;
-    else if (stage.includes("closed")) closed++;
-  });
-
-  document.getElementById("stat-active").innerText = active;
-  document.getElementById("stat-pending").innerText = pending;
-  document.getElementById("stat-closed").innerText = closed;
-}
-
-// =======================
-// FILTER UI
-// =======================
-function renderFilters() {
-  const el = document.getElementById("stageFilters");
-
-  const filters = ["All", "Active", "Pending", "Closed", "Lost"];
-
-  el.innerHTML = filters.map(f => `
-    <button 
-      class="filter-chip ${activeFilter === f ? "active" : ""}" 
-      onclick="setFilter('${f}')">
-      ${f}
-    </button>
-  `).join("");
-}
-
-function setFilter(filter) {
-  activeFilter = filter;
-  renderFilters();
-  filterTransactions();
-}
-
-// =======================
-// FILTER + SEARCH
-// =======================
-function filterTransactions() {
-  const query = document.getElementById("txSearch").value.toLowerCase();
-
-  let filtered = [...allTransactions];
-
-  // FILTER BY STAGE
-  if (activeFilter !== "All") {
-    filtered = filtered.filter(item => {
-      const stage = (item["Stage"] || "").toLowerCase();
-
-      if (activeFilter === "Active") return stage.includes("active") || stage.includes("coming") || stage.includes("offer") || stage.includes("price");
-      if (activeFilter === "Pending") return stage.includes("pending") || stage.includes("under contract");
-      if (activeFilter === "Closed") return stage.includes("closed");
-      if (activeFilter === "Lost") return stage.includes("lost") || stage.includes("withdrawn");
-
-      return true;
-    });
-  }
-
-  // SEARCH
-  if (query) {
-    filtered = filtered.filter(item =>
-      (item["Client Name"] || "").toLowerCase().includes(query) ||
-      (item["Address"] || "").toLowerCase().includes(query) ||
-      (item["Agent Name"] || "").toLowerCase().includes(query)
-    );
-  }
-
-  // SORT BY CLOSE DATE (soonest first)
-  filtered.sort((a, b) => {
-    const dateA = new Date(a["Contract Close Date"] || "2100-01-01");
-    const dateB = new Date(b["Contract Close Date"] || "2100-01-01");
-    return dateA - dateB;
-  });
-
-  renderTransactions(filtered);
-}
-
-// =======================
-// RENDER UI (UPGRADED)
-// =======================
-function renderTransactions(data) {
-  const container = document.getElementById("txList");
-  const countEl = document.getElementById("txCount");
-
-  container.innerHTML = "";
-  countEl.innerText = `${data.length} deals`;
-
-  if (!data.length) {
-    container.innerHTML = `<div class="empty-state">No transactions found</div>`;
-    return;
-  }
-
-  data.forEach((item, index) => {
-
-    const stage = item["Stage"] || "";
-    const s = stage.toLowerCase();
-
-    let stageClass = "stage-active";
-    if (s.includes("closed")) stageClass = "stage-closed";
-    else if (s.includes("pending") || s.includes("under contract")) stageClass = "stage-pending";
-    else if (s.includes("lost") || s.includes("withdrawn")) stageClass = "stage-lost";
-    else if (s.includes("coming")) stageClass = "stage-coming";
-    else if (s.includes("offer")) stageClass = "stage-offer";
-    else if (s.includes("price")) stageClass = "stage-price";
-
-    const closeDate = item["Contract Close Date"] || "-";
-
-    container.innerHTML += `
-      <div class="tx-card" onclick="openDetail(${index})">
-        
-        <div class="tx-top">
-          <div>
-            <div class="tx-client">${item["Client Name"]}</div>
-            <div class="tx-address">${item["Address"] || "-"}</div>
-          </div>
-          <div class="stage-badge ${stageClass}">
-            ${stage}
-          </div>
-        </div>
-
-        <div class="tx-bottom">
-          <div class="tx-agent">${item["Agent Name"] || "-"}</div>
-          <div class="tx-meta">${item["Price"] || "-"}</div>
-        </div>
-
-        <div class="tx-footer">
-          <span>📅 ${closeDate}</span>
-          <span>${item["Property Type"] || ""}</span>
-        </div>
-
-      </div>
-    `;
-  });
-}
-
-// =======================
-// DETAIL OVERLAY
-// =======================
-function openDetail(index) {
-  const overlay = document.getElementById('txDetail');
-  if(overlay) overlay.classList.add('open');
-}
-
-function closeDetail(event) {
-  if (event && event.target.id !== 'txDetail') return;
-  document.getElementById('txDetail').classList.remove('open');
-}
-
-// =======================
-// NAVIGATION HOOK
-// =======================
+// ===== NAVIGATION =====
+let currentPage = 'home';
 function navigate(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
   document.getElementById('nav-' + page).classList.add('active');
   currentPage = page;
-
-  if (page === "transactions") {
-    loadTransactions();
-  }
 }
 
-// =======================
-// RENDER AGENTS & VA TEAM
-// =======================
+// ===== HEADER DATE =====
+const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const now = new Date();
+document.getElementById('headerDate').textContent = days[now.getDay()] + ' ' + months[now.getMonth()] + ' ' + now.getDate();
+
+// ===== STATS =====
+function calcStats() {
+  let active = 0, pending = 0, closed = 0;
+  transactions.forEach(t => {
+    const s = t.stage.toLowerCase();
+    if (s.includes('closed') && !s.includes('coming')) closed++;
+    else if (s.includes('pending') || s.includes('under contract') || s.includes('active') || s.includes('offer') || s.includes('coming') || s.includes('price')) active++;
+    else if (s.includes('lost') || s.includes('withdrawn')) {}
+    else active++;
+  });
+  pending = transactions.filter(t => t.stage.toLowerCase().includes('pending') || t.stage.toLowerCase().includes('under contract')).length;
+  active = transactions.filter(t => {
+    const s = t.stage.toLowerCase();
+    return s.includes('active') || s.includes('coming') || s.includes('offer') || s.includes('price');
+  }).length;
+  document.getElementById('stat-active').textContent = active;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-closed').textContent = closed;
+}
+calcStats();
+
+// ===== FILTER CHIPS =====
+const stages = ['All', 'Active', 'Pending', 'Closed', 'Lost'];
+let activeFilter = 'All';
+const filtersBar = document.getElementById('stageFilters');
+stages.forEach(s => {
+  const chip = document.createElement('button');
+  chip.className = 'filter-chip' + (s === 'All' ? ' active' : '');
+  chip.textContent = s;
+  chip.onclick = () => {
+    activeFilter = s;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    filterTransactions();
+  };
+  filtersBar.appendChild(chip);
+});
+
+// ===== TRANSACTIONS =====
+let filteredTx = [...transactions];
+
+function filterTransactions() {
+  const q = document.getElementById('txSearch').value.toLowerCase();
+  filteredTx = transactions.filter(t => {
+    const matchQ = !q || t.client.toLowerCase().includes(q) || t.address.toLowerCase().includes(q) || t.agent.toLowerCase().includes(q);
+    let matchStage = true;
+    if (activeFilter === 'Active') matchStage = t.stage.toLowerCase().includes('active') || t.stage.toLowerCase().includes('coming') || t.stage.toLowerCase().includes('offer') || t.stage.toLowerCase().includes('price');
+    else if (activeFilter === 'Pending') matchStage = t.stage.toLowerCase().includes('pending') || t.stage.toLowerCase().includes('under contract');
+    else if (activeFilter === 'Closed') matchStage = t.stage.toLowerCase().includes('closed');
+    else if (activeFilter === 'Lost') matchStage = t.stage.toLowerCase().includes('lost') || t.stage.toLowerCase().includes('withdrawn');
+    return matchQ && matchStage;
+  });
+  renderTransactions();
+}
+
+function renderTransactions() {
+  const list = document.getElementById('txList');
+  const count = document.getElementById('txCount');
+  count.textContent = filteredTx.length + ' result' + (filteredTx.length !== 1 ? 's' : '');
+  list.innerHTML = '';
+  if (filteredTx.length === 0) {
+    list.innerHTML = '<div class="empty-state">No transactions found</div>';
+    return;
+  }
+  filteredTx.forEach((t, i) => {
+    const badge = getStageBadge(t.stage);
+    const card = document.createElement('div');
+    card.className = 'tx-card';
+    card.onclick = () => openDetail(transactions.indexOf(t));
+    card.innerHTML = `
+      <div class="tx-top">
+        <div>
+          <div class="tx-client">${t.client}</div>
+          <div class="tx-address">${t.address}</div>
+        </div>
+        <span class="stage-badge ${badge.cls}">${badge.label}</span>
+      </div>
+      <div class="tx-bottom">
+        <div class="tx-agent">${t.agent.split(' ')[0]} · ${t.type}</div>
+        <div class="tx-meta">${t.price || '—'}${t.closing ? ' · ' + t.closing : ''}</div>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+// ===== RENDER VA TEAM =====
 function renderVA() {
   const el = document.getElementById('vaList');
   if (!el) return;
@@ -1156,6 +1120,7 @@ function renderVA() {
   });
 }
 
+// ===== RENDER AGENTS =====
 function renderAgents(list) {
   const el = document.getElementById('agentList');
   el.innerHTML = '';
@@ -1193,6 +1158,7 @@ function renderAgents(list) {
   });
 }
 
+// ===== SEARCH FILTER =====
 function filterAgents() {
   const q = document.getElementById('agentSearch').value.toLowerCase();
 
@@ -1206,20 +1172,11 @@ function filterAgents() {
   );
 }
 
-// =======================
-// INIT & TIMERS
-// =======================
+// ===== INIT =====
+filterTransactions(); // Fix for the stray '();'
 renderVA();
 renderAgents(agents);
-loadTransactions();
-
-setInterval(() => {
-  const page = document.getElementById("page-transactions");
-  if (page && page.classList.contains("active")) {
-    loadTransactions();
-  }
-}, 30000);
-
 </script>
+
 </body>
 </html>
