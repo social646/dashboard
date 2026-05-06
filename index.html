@@ -132,7 +132,7 @@
     <div class="section-title">Team Video</div>
     <div style="padding: 0 16px 24px;">
       <iframe style="width:100%; height:200px; border-radius:var(--radius); border:none;" 
-        src="https://www.youtube.com/embed/6MH8uQLcK60?si=dPtPiBmA4eO1vjM_" 
+        src="https://www.youtube.com/embed/6MH8uQLcK60?si=sDmaoWSlpXmo-v4n" 
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
       </iframe>
     </div>
@@ -169,9 +169,9 @@
 
     <div class="section-title" style="text-align: center;">Connect With Us</div>
     <div style="display: flex; justify-content: center; gap: 16px; padding: 0 16px 24px;">
-      <a href="https://facebook.com" target="_blank" class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
-      <a href="https://instagram.com" target="_blank" class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-      <a href="https://linkedin.com" target="_blank" class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+      <a href="https://www.facebook.com/MCobbRealtor" target="_blank" class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+      <a href="https://www.instagram.com/cobbrealtygroup/" target="_blank" class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+      <a href="https://www.linkedin.com/company/cobbrealtygroup" target="_blank" class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
     </div>
   </div>
 
@@ -254,15 +254,13 @@ const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzlwG3C387Ykin4H095
 
 let transactions = [], filteredTx = [], agents = [], announcements = [];
 
-// YOU CAN PASTE DRIVE FOLDER URLS FOR THE VA TEAM IN THE 'folder' FIELD BELOW:
 const vaTeam = [
-  { name: "Cara Flores", role: "Operations Manager", email: "cara@mycobbrealty.com", photo:https://www.dropbox.com/scl/fi/xd8n13k0tbp1crxws3ces/Cara.png?rlkey=pusc88acd8psx7dl0fnyju55j&st=2t3sc3q2&dl=0 "", folder: "" },
-  { name: "Mica Ancajas", role: "Transaction Coordinator", email: "mica@tycobbrealty.com", photo:https://www.dropbox.com/scl/fi/mdyqsy4girhlxj3fsexye/Mica.png?rlkey=vdy2pwpo6gmwxj3um0th11xrb&st=9zp3mdnv&dl=0 "", folder: "" },
-  { name: "Melrose Santos", role: "Transaction Coordinator", email: "melrose@tycobbrealty.com", photo:https://www.dropbox.com/scl/fi/8yhew9qjwil18597r4pk3/Melrose.png?rlkey=z5gvqxx52ycb4ehafttszr9e6&st=ux1f8qj3&dl=0 "", folder: "" },
-  { name: "Jessan Cinco", role: "Social Media Manager", email: "social@mycobbrealty.com", photo:https://www.dropbox.com/scl/fi/tmuinfv15a0wxi7qcdtdh/Jessan.png?rlkey=sm96nx7bw2eoyaq9qq00g4hsg&st=2weo7lft&dl=0 "", folder: "" }
+  { name: "Cara Flores", role: "Operations Manager", email: "cara@mycobbrealty.com", photo: "https://www.dropbox.com/scl/fi/xd8n13k0tbp1crxws3ces/Cara.png?rlkey=pusc88acd8psx7dl0fnyju55j&st=2t3sc3q2&dl=0", folder: "" },
+  { name: "Mica Ancajas", role: "Transaction Coordinator", email: "mica@tycobbrealty.com", photo: "https://www.dropbox.com/scl/fi/mdyqsy4girhlxj3fsexye/Mica.png?rlkey=vdy2pwpo6gmwxj3um0th11xrb&st=9zp3mdnv&dl=0", folder: "" },
+  { name: "Melrose Santos", role: "Transaction Coordinator", email: "melrose@tycobbrealty.com", photo: "https://www.dropbox.com/scl/fi/8yhew9qjwil18597r4pk3/Melrose.png?rlkey=z5gvqxx52ycb4ehafttszr9e6&st=ux1f8qj3&dl=0", folder: "" },
+  { name: "Jessan Cinco", role: "Social Media Manager", email: "social@mycobbrealty.com", photo: "https://www.dropbox.com/scl/fi/tmuinfv15a0wxi7qcdtdh/Jessan.png?rlkey=sm96nx7bw2eoyaq9qq00g4hsg&st=2weo7lft&dl=0", folder: "" }
 ];
 
-// Helper to fix Dropbox and Google Drive image links so they load properly
 function formatImageUrl(url) {
   if (!url) return '';
   let formattedUrl = String(url).trim();
@@ -308,8 +306,6 @@ function formatFolderLink(rawLink) {
 
 function openDetail(index) {
   const t = filteredTx[index]; if (!t) return;
-  
-  // ZILLOW AUTO-LINK GENERATOR
   const propertyAddress = t.Address || t.PropertyAddress || '';
   const zillowLink = propertyAddress ? 'https://www.zillow.com/homes/' + encodeURIComponent(propertyAddress) : '#';
   
@@ -374,11 +370,8 @@ function renderTransactions() {
   const list = document.getElementById('txList'); list.innerHTML = ''; document.getElementById('txCount').textContent = filteredTx.length + ' results';
   if (filteredTx.length === 0) return list.innerHTML = '<div class="empty-state">No transactions found</div>';
   filteredTx.forEach((t, i) => {
-    
-    // ZILLOW AUTO-LINK GENERATOR
     const propertyAddress = t.Address || t.PropertyAddress || '';
     const zillowLink = propertyAddress ? 'https://www.zillow.com/homes/' + encodeURIComponent(propertyAddress) : '#';
-    
     const b = getStageBadge(t.Stage || t.Status);
     const cName = t.ClientName || t.Client || 'Unknown Client', aName = t.AgentName || t.Agent || 'Agent';
     const card = document.createElement('div'); card.className = 'tx-card';
@@ -411,10 +404,8 @@ function renderAgents(list) {
   list.forEach(a => {
     let photoUrl = a.PhotoURL || a.Photo || a.PhotoUrl || '';
     photoUrl = formatImageUrl(photoUrl);
-    
     const avatarHTML = photoUrl !== '' ? `<img src="${photoUrl}">` : (a.Name||'A').split(' ').map(n=>n[0]).join('').substring(0,2);
     const fLink = formatFolderLink(a.DriveLink || a.FolderLink || a.FilesLink);
-    
     const card = document.createElement('div'); card.className = 'agent-card';
     card.innerHTML = `
       <div class="agent-avatar">${avatarHTML}</div>
