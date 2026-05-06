@@ -84,7 +84,7 @@
   .agent-name { font-size: 15px; font-weight: 500; }
   .agent-email { font-size: 11px; color: var(--gray-400); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .agent-actions { display: flex; gap: 8px; }
-  .act-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--gray-200); background: var(--gray-100); display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--black); }
+  .act-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--gray-200); background: var(--gray-100); display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--black); cursor: pointer; }
   
   /* TRAINING & FORMS */
   .training-section, .forms-section { padding: 16px; }
@@ -243,43 +243,34 @@
 
 <script>
 // ==========================================
-// 1. YOUR GOOGLE APPS SCRIPT WEB APP URL:
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzlwG3C387Ykin4H095VuWOD6JWnpQOmAPbUF-1UP-636BJDCMd8PFBc3Y_5Atk2h5zXQ/exec";
 // ==========================================
 
 let transactions = [], filteredTx = [], agents = [], announcements = [];
 
-// YOU CAN PASTE HEADSHOT IMAGE URLS FOR THE VA TEAM IN THE 'photo' FIELD BELOW:
+// YOU CAN PASTE DRIVE FOLDER URLS FOR THE VA TEAM IN THE 'folder' FIELD BELOW:
 const vaTeam = [
-  { name: "Cara Flores", role: "Operations Manager", email: "cara@mycobbrealty.com", photo: "" },
-  { name: "Micaella Ancajas", role: "Transaction Coordinator", email: "mica@tycobbrealty.com", photo: "" },
-  { name: "Melrose Santos", role: "Transaction Coordinator", email: "melrose@tycobbrealty.com", photo: "" },
-  { name: "Jessan Kyla Cinco", role: "Social Media Manager", email: "social@mycobbrealty.com", photo: "" }
+  { name: "Cara Flores", role: "Operations Manager", email: "cara@mycobbrealty.com", photo: "", folder: "" },
+  { name: "Micaella Ancajas", role: "Transaction Coordinator", email: "mica@tycobbrealty.com", photo: "", folder: "" },
+  { name: "Melrose Santos", role: "Transaction Coordinator", email: "melrose@tycobbrealty.com", photo: "", folder: "" },
+  { name: "Jessan Kyla Cinco", role: "Social Media Manager", email: "social@mycobbrealty.com", photo: "", folder: "" }
 ];
 
 async function refreshData() {
-  const refreshBtn = document.getElementById('refreshBtn');
-  const txList = document.getElementById('txList');
+  const refreshBtn = document.getElementById('refreshBtn'), txList = document.getElementById('txList');
   if (refreshBtn) refreshBtn.style.opacity = '0.5';
-  
+  if (txList.innerHTML === '' || txList.innerHTML.includes('empty-state')) txList.innerHTML = '<div class="empty-state">Loading live data...</div>';
+
   try {
     const response = await fetch(WEB_APP_URL, { cache: "no-store" });
     const data = await response.json();
-    
-    transactions = data.transactions || [];
-    announcements = data.announcements || [];
-    
-    // Filter out VA team from the main Agent directory
+    transactions = data.transactions || []; announcements = data.announcements || [];
     const namesToHide = ["Cara", "Micaella", "Melrose", "Jessan"];
     agents = (data.agents || []).filter(a => !namesToHide.some(vaName => (a.Name||"").includes(vaName)));
     
-    calcStats();
-    filterTransactions();
-    renderAgents(agents);
-    renderAnnouncements(announcements);
+    calcStats(); filterTransactions(); renderAgents(agents); renderAnnouncements(announcements);
   } catch (error) {
-    console.error(error);
-    txList.innerHTML = '<div class="empty-state" style="color:var(--danger)">Error loading data.</div>';
+    console.error(error); txList.innerHTML = '<div class="empty-state" style="color:var(--danger)">Error loading data.</div>';
   } finally {
     if (refreshBtn) refreshBtn.style.opacity = '1';
   }
@@ -288,28 +279,25 @@ async function refreshData() {
 window.onload = function() { renderVA(); refreshData(); };
 
 function formatFolderLink(rawLink) {
-  let link = String(rawLink || '').trim();
-  if (link === 'null' || link === '') return '#';
+  let link = String(rawLink || '').trim(); if (link === 'null' || link === '') return '#';
   if (!link.startsWith('http://') && !link.startsWith('https://')) link = 'https://' + link;
   return link;
 }
 
 function openDetail(index) {
-  const t = filteredTx[index];
-  if (!t) return;
-  const folderLink = formatFolderLink(t.FilesLink || t.FileLink || t.DriveLink || t.FolderLink);
+  const t = filteredTx[index]; if (!t) return;
   
-  // FIX: This correctly reads 'Client Name' instead of just 'Client'
-  const clientName = t.ClientName || t.Client || 'Unknown Client';
-  const aName = t.AgentName || t.Agent || '—';
+  // ZILLOW AUTO-LINK GENERATOR
+  const propertyAddress = t.Address || t.PropertyAddress || '';
+  const zillowLink = propertyAddress ? 'https://www.zillow.com/homes/' + encodeURIComponent(propertyAddress) : '#';
   
-  document.getElementById('d-client').textContent = clientName;
-  document.getElementById('d-address').innerHTML = folderLink !== '#' ? `<a onclick="window.open('${folderLink}', '_blank'); return false;" class="tx-address">${t.Address||''}</a>` : t.Address||'';
+  document.getElementById('d-client').textContent = t.ClientName || t.Client || 'Unknown';
+  document.getElementById('d-address').innerHTML = zillowLink !== '#' ? `<a onclick="window.open('${zillowLink}', '_blank'); return false;" class="tx-address">${propertyAddress}</a>` : propertyAddress;
   document.getElementById('d-rows').innerHTML = `
-    <div class="detail-row"><span class="detail-label">Agent</span><span class="detail-value">${aName}</span></div>
+    <div class="detail-row"><span class="detail-label">Agent</span><span class="detail-value">${t.AgentName || t.Agent || '—'}</span></div>
     <div class="detail-row"><span class="detail-label">Stage</span><span class="detail-value">${t.Stage || t.Status || '—'}</span></div>
     <div class="detail-row"><span class="detail-label">Price</span><span class="detail-value">${t.Price || '—'}</span></div>
-    <div class="detail-row"><span class="detail-label">Folder</span><span class="detail-value">${folderLink !== '#' ? `<a onclick="window.open('${folderLink}', '_blank'); return false;" style="color:var(--info); cursor:pointer;">Open Folder</a>` : 'None'}</span></div>
+    <div class="detail-row"><span class="detail-label">Zillow</span><span class="detail-value">${zillowLink !== '#' ? `<a onclick="window.open('${zillowLink}', '_blank'); return false;" style="color:var(--info); cursor:pointer;">View Property</a>` : '—'}</span></div>
   `;
   document.getElementById('txDetail').classList.add('open');
 }
@@ -319,13 +307,7 @@ function closeDetail(e) { if (e && e.target !== document.getElementById('txDetai
 const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const now = new Date(); document.getElementById('headerDate').textContent = `${days[now.getDay()]} ${months[now.getMonth()]} ${now.getDate()}`;
 
-function navigate(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  document.getElementById('nav-' + page).classList.add('active');
-  window.scrollTo(0, 0);
-}
+function navigate(page) { document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active')); document.getElementById('page-' + page).classList.add('active'); document.getElementById('nav-' + page).classList.add('active'); window.scrollTo(0, 0); }
 
 function getStageBadge(stage) {
   const s = (stage || '').toLowerCase();
@@ -339,15 +321,12 @@ function calcStats() {
   let a = 0, p = 0, c = 0;
   transactions.forEach(t => {
     const s = (t.Stage || t.Status || '').toLowerCase();
-    if (s.includes('closed') && !s.includes('coming')) c++;
-    else if (s.includes('pending') || s.includes('under contract')) p++;
-    else if (!s.includes('lost') && !s.includes('withdrawn')) a++;
+    if (s.includes('closed') && !s.includes('coming')) c++; else if (s.includes('pending') || s.includes('under contract')) p++; else if (!s.includes('lost') && !s.includes('withdrawn')) a++;
   });
   document.getElementById('stat-active').textContent = a; document.getElementById('stat-pending').textContent = p; document.getElementById('stat-closed').textContent = c;
 }
 
-const stages = ['All', 'Active', 'Pending', 'Closed', 'Lost']; let activeFilter = 'All';
-const filtersBar = document.getElementById('stageFilters');
+const stages = ['All', 'Active', 'Pending', 'Closed', 'Lost']; let activeFilter = 'All'; const filtersBar = document.getElementById('stageFilters');
 stages.forEach(s => {
   const chip = document.createElement('button'); chip.className = 'filter-chip' + (s === 'All' ? ' active' : ''); chip.textContent = s;
   chip.onclick = () => { activeFilter = s; document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active')); chip.classList.add('active'); filterTransactions(); };
@@ -358,9 +337,7 @@ function filterTransactions() {
   const q = document.getElementById('txSearch').value.toLowerCase();
   filteredTx = transactions.filter(t => {
     const stage = (t.Stage || t.Status || '').toLowerCase();
-    const cName = (t.ClientName || t.Client || '').toLowerCase();
-    const aName = (t.AgentName || t.Agent || '').toLowerCase();
-    const matchQ = !q || cName.includes(q) || (t.Address||'').toLowerCase().includes(q) || aName.includes(q);
+    const matchQ = !q || (t.ClientName||t.Client||'').toLowerCase().includes(q) || (t.Address||'').toLowerCase().includes(q) || (t.AgentName||t.Agent||'').toLowerCase().includes(q);
     let matchS = true;
     if (activeFilter === 'Active') matchS = !stage.includes('closed') && !stage.includes('pending') && !stage.includes('lost') && !stage.includes('withdrawn');
     else if (activeFilter === 'Pending') matchS = stage.includes('pending') || stage.includes('under contract');
@@ -372,25 +349,18 @@ function filterTransactions() {
 }
 
 function renderTransactions() {
-  const list = document.getElementById('txList'); list.innerHTML = '';
-  document.getElementById('txCount').textContent = filteredTx.length + ' results';
+  const list = document.getElementById('txList'); list.innerHTML = ''; document.getElementById('txCount').textContent = filteredTx.length + ' results';
   if (filteredTx.length === 0) return list.innerHTML = '<div class="empty-state">No transactions found</div>';
-  
   filteredTx.forEach((t, i) => {
-    const fLink = formatFolderLink(t.FilesLink || t.FileLink || t.DriveLink || t.FolderLink), b = getStageBadge(t.Stage || t.Status);
     
-    // FIX: This correctly reads 'Client Name' and 'Agent Name'
-    const cName = t.ClientName || t.Client || 'Unknown Client';
-    const aName = t.AgentName || t.Agent || 'Agent';
+    // ZILLOW AUTO-LINK GENERATOR
+    const propertyAddress = t.Address || t.PropertyAddress || '';
+    const zillowLink = propertyAddress ? 'https://www.zillow.com/homes/' + encodeURIComponent(propertyAddress) : '#';
     
+    const b = getStageBadge(t.Stage || t.Status);
+    const cName = t.ClientName || t.Client || 'Unknown Client', aName = t.AgentName || t.Agent || 'Agent';
     const card = document.createElement('div'); card.className = 'tx-card';
-    card.innerHTML = `
-      <div class="tx-top">
-        <div><div class="tx-client" onclick="openDetail(${i})">${cName}</div>
-        ${fLink !== '#' ? `<a onclick="window.open('${fLink}', '_blank'); return false;" class="tx-address">${t.Address||''}</a>` : `<div class="tx-address" style="color:var(--gray-600); border:none;" onclick="openDetail(${i})">${t.Address||''}</div>`}
-        </div><span class="stage-badge ${b.cls}" onclick="openDetail(${i})">${b.label}</span>
-      </div>
-      <div class="tx-bottom" onclick="openDetail(${i})"><div class="tx-agent">${aName.split(' ')[0]}</div><div class="tx-meta">${t.Price||''}</div></div>`;
+    card.innerHTML = `<div class="tx-top"><div><div class="tx-client" onclick="openDetail(${i})">${cName}</div>${zillowLink !== '#' ? `<a onclick="window.open('${zillowLink}', '_blank'); return false;" class="tx-address">${propertyAddress}</a>` : `<div class="tx-address" style="color:var(--gray-600); border:none;" onclick="openDetail(${i})">${propertyAddress}</div>`}</div><span class="stage-badge ${b.cls}" onclick="openDetail(${i})">${b.label}</span></div><div class="tx-bottom" onclick="openDetail(${i})"><div class="tx-agent">${aName.split(' ')[0]}</div><div class="tx-meta">${t.Price||''}</div></div>`;
     list.appendChild(card);
   });
 }
@@ -399,9 +369,15 @@ function renderVA() {
   const el = document.getElementById('vaList'); el.innerHTML = '';
   vaTeam.forEach(v => {
     const avatar = v.photo ? `<img src="${v.photo}">` : v.name.charAt(0);
+    const fLink = formatFolderLink(v.folder);
     const card = document.createElement('div'); card.className = 'agent-card';
-    card.innerHTML = `<div class="agent-avatar">${avatar}</div><div class="agent-info"><div class="agent-name">${v.name}</div><div class="agent-email">${v.role}</div></div>
-      <div class="agent-actions"><a class="act-btn" href="mailto:${v.email}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a></div>`;
+    card.innerHTML = `
+      <div class="agent-avatar">${avatar}</div>
+      <div class="agent-info"><div class="agent-name">${v.name}</div><div class="agent-email">${v.role}</div></div>
+      <div class="agent-actions">
+        ${fLink !== '#' ? `<a class="act-btn" onclick="window.open('${fLink}', '_blank'); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></a>` : ''}
+        <a class="act-btn" href="mailto:${v.email}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>
+      </div>`;
     el.appendChild(card);
   });
 }
@@ -410,13 +386,18 @@ function renderAgents(list) {
   const el = document.getElementById('agentList'); el.innerHTML = '';
   if(list.length === 0) return el.innerHTML = '<div class="empty-state">No agents found.</div>';
   list.forEach(a => {
-    const initials = (a.Name||'A').split(' ').map(n=>n[0]).join('').substring(0,2);
-    const photoUrl = a.PhotoURL || a.Photo || a.PhotoUrl || ''; 
-    const avatarHTML = photoUrl !== '' ? `<img src="${photoUrl}">` : initials;
+    const photoUrl = a.PhotoURL || a.Photo || a.PhotoUrl || '';
+    const avatarHTML = photoUrl !== '' ? `<img src="${photoUrl}">` : (a.Name||'A').split(' ').map(n=>n[0]).join('').substring(0,2);
+    
+    // THIS PULLS THE DRIVE FOLDER LINK FOR THE AGENT
+    const fLink = formatFolderLink(a.DriveLink || a.FolderLink || a.FilesLink);
+    
     const card = document.createElement('div'); card.className = 'agent-card';
-    card.innerHTML = `<div class="agent-avatar">${avatarHTML}</div>
+    card.innerHTML = `
+      <div class="agent-avatar">${avatarHTML}</div>
       <div class="agent-info"><div class="agent-name">${a.Name||''}</div><div class="agent-email">${a.Email||''}</div></div>
       <div class="agent-actions">
+        ${fLink !== '#' ? `<a class="act-btn" onclick="window.open('${fLink}', '_blank'); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></a>` : ''}
         ${a.Phone ? `<a class="act-btn" href="tel:${a.Phone}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006 6l1.27-.85a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 15.92z"/></svg></a>` : ''}
         ${a.Email ? `<a class="act-btn" href="mailto:${a.Email}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>` : ''}
       </div>`;
@@ -433,10 +414,7 @@ function renderAnnouncements(list) {
   const el = document.getElementById('announcementsList'); el.innerHTML = '';
   if(!list || list.length === 0) return el.innerHTML = '<div class="empty-state">No new team updates.</div>';
   list.forEach(a => {
-    let rawDate = String(a.Date || ''); 
-    if(rawDate && new Date(rawDate).toString() !== 'Invalid Date') {
-       rawDate = new Date(rawDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
-    }
+    let rawDate = String(a.Date || ''); if(rawDate && new Date(rawDate).toString() !== 'Invalid Date') rawDate = new Date(rawDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase();
     const card = document.createElement('div'); card.className = 'announcement-card';
     card.innerHTML = `${rawDate ? `<div class="ann-date">${rawDate}</div>` : ''}<div class="ann-title">${a.Title||'Update'}</div>${a.Message ? `<div class="ann-body">${a.Message}</div>` : ''}`;
     el.appendChild(card);
