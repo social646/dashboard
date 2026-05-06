@@ -382,7 +382,6 @@ async function refreshData() {
     const namesToHide = ["Cara", "Micaella", "Melrose", "Jessan"];
     agents = (data.agents || []).filter(a => {
       const agentName = a.Name || "";
-      // Only keep the agent if their name DOES NOT include any of the VA names
       return !namesToHide.some(vaName => agentName.includes(vaName));
     });
     
@@ -410,7 +409,10 @@ function openDetail(index) {
   
   const clientName = t.Client || t.ClientName || 'Unknown Client';
   const address = t.Address || t.PropertyAddress || 'Unknown Address';
-  const folderLink = t.DriveLink || t.FolderLink || '#';
+  
+  // This line is updated to look for "Files Link" or "File Link" too!
+  const folderLink = t.FilesLink || t.FileLink || t.DriveLink || t.FolderLink || '#';
+  
   const agentName = t.Agent || t.AgentName || '—';
   const stage = t.Stage || t.Status || '—';
   const price = t.Price || t.PurchasePrice || '—';
@@ -532,9 +534,11 @@ function renderTransactions() {
     const clientName = t.Client || t.ClientName || 'Unknown Client';
     const address = t.Address || t.PropertyAddress || 'Unknown Address';
     const agentName = t.Agent || t.AgentName || 'Agent';
-    const folderLink = t.DriveLink || t.FolderLink || '#';
-    const price = t.Price || t.PurchasePrice || '';
     
+    // This line is updated to look for "Files Link" or "File Link" too!
+    const folderLink = t.FilesLink || t.FileLink || t.DriveLink || t.FolderLink || '#';
+    
+    const price = t.Price || t.PurchasePrice || '';
     const badge = getStageBadge(t.Stage || t.Status);
     const card = document.createElement('div');
     card.className = 'tx-card';
