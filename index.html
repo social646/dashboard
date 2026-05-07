@@ -2,104 +2,184 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#000000">
 <title>CRG Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root { --black: #0a0a0a; --white: #ffffff; --sage: #8aab8e; --sage-light: #b8ceba; --sage-dark: #5a7a5e; --gray-100: #f5f5f3; --gray-200: #e8e8e4; --gray-400: #a0a09a; --gray-600: #666660; --info: #2980b9; --danger: #c0392b; --radius: 12px; --radius-sm: 8px; --nav-height: 64px; --header-height: 56px; }
+  :root {
+    --black: #0a0a0a; --white: #ffffff;
+    --sage: #8aab8e; --sage-light: #b8ceba; --sage-dark: #5a7a5e;
+    --gray-100: #f5f5f3; --gray-200: #e8e8e4; --gray-300: #d0d0cc;
+    --gray-400: #a0a09a; --gray-600: #666660;
+    --info: #2980b9; --danger: #c0392b;
+    --radius: 14px; --radius-sm: 9px;
+    --nav-height: 68px; --header-height: 56px;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+    --t: 0.2s ease;
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { font-family: 'DM Sans', sans-serif; background: var(--gray-100); color: var(--black); min-height: 100vh; overscroll-behavior: none; }
-  .app-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-height); background: var(--black); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 100; }
+
+  /* HEADER */
+  .app-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-height); background: var(--black); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 100; }
   .header-logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--white); letter-spacing: 0.08em; }
   .header-logo span { color: var(--sage); }
-  .header-date { font-size: 11px; color: var(--gray-400); letter-spacing: 0.05em; }
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-height); background: var(--black); display: flex; align-items: stretch; z-index: 100; padding-bottom: env(safe-area-inset-bottom); }
-  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; border: none; background: transparent; color: var(--gray-600); font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.04em; transition: color 0.2s; padding: 8px 4px; }
+  .header-right { display: flex; align-items: center; gap: 14px; }
+  .header-date { font-size: 11px; color: var(--gray-400); letter-spacing: 0.06em; }
+  .refresh-btn { background: transparent; border: none; color: var(--gray-400); cursor: pointer; padding: 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: color var(--t), background var(--t); }
+  .refresh-btn:hover { color: var(--sage); background: rgba(255,255,255,0.07); }
+  .refresh-btn.spinning svg { animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* BOTTOM NAV */
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-height); background: var(--black); display: flex; align-items: stretch; z-index: 100; padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid rgba(255,255,255,0.06); }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; border: none; background: transparent; color: var(--gray-600); font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.04em; transition: color var(--t); padding: 8px 4px; position: relative; }
+  .nav-item::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%) scaleX(0); width: 24px; height: 2px; background: var(--sage); border-radius: 0 0 2px 2px; transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); }
   .nav-item.active { color: var(--sage); }
+  .nav-item.active::before { transform: translateX(-50%) scaleX(1); }
   .nav-item svg { width: 20px; height: 20px; }
-  .main { padding-top: var(--header-height); padding-bottom: calc(var(--nav-height) + 16px); min-height: 100vh; }
-  .page { display: none; } .page.active { display: block; }
-  .section-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 12px; padding: 0 16px; }
-  
-  /* HOME */
-  .home-hero { background: var(--black); padding: 28px 20px 32px; color: var(--white); }
-  .home-greeting { font-size: 12px; color: var(--sage); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
-  .home-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 500; line-height: 1.2; margin-bottom: 6px; }
-  .home-sub { font-size: 13px; color: var(--gray-400); line-height: 1.5; }
-  .home-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 16px; background: var(--black); margin-bottom: 16px;}
-  .stat-pill { background: rgba(255,255,255,0.07); border-radius: var(--radius-sm); padding: 12px 10px; text-align: center; }
-  .stat-pill .num { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--white); line-height: 1; }
-  .stat-pill .lbl { font-size: 10px; color: var(--sage-light); margin-top: 4px; line-height: 1.3; }
-  .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; padding: 0 16px; }
-  .quick-card { background: var(--white); border-radius: var(--radius); padding: 16px; cursor: pointer; border: 1px solid var(--gray-200); display: flex; flex-direction: column; gap: 8px; }
-  .quick-card .qc-icon { width: 36px; height: 36px; background: var(--black); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--sage); }
-  .quick-card .qc-title { font-size: 13px; font-weight: 500; color: var(--black); }
-  .announcements-list { padding: 0 16px 24px; }
-  .announcement-card { background: var(--white); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; border-left: 3px solid var(--sage); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-  .ann-date { font-size: 10px; color: var(--gray-400); margin-bottom: 4px; font-weight: 500; }
-  .ann-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
-  .ann-body { font-size: 12px; color: var(--gray-600); line-height: 1.5; }
-  
-  /* TRANSACTIONS */
-  .page-header { background: var(--black); padding: 20px 16px 16px; color: var(--white); }
-  .page-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500; margin-bottom: 4px; }
+
+  /* LAYOUT */
+  .main { padding-top: var(--header-height); padding-bottom: calc(var(--nav-height) + 20px); min-height: 100vh; }
+  .page { display: none; opacity: 0; transform: translateY(8px); transition: opacity 0.22s ease, transform 0.22s ease; }
+  .page.active { display: block; }
+  .page.visible { opacity: 1; transform: translateY(0); }
+
+  /* SECTION TITLE */
+  .section-title { font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 14px; padding: 0 20px; display: flex; align-items: center; gap: 10px; }
+  .section-title::before { content: ''; display: inline-block; width: 3px; height: 12px; background: var(--sage); border-radius: 2px; flex-shrink: 0; }
+
+  /* HOME HERO */
+  .home-hero { background: var(--black); padding: 28px 20px 24px; color: var(--white); }
+  .home-greeting { font-size: 11px; color: var(--sage); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; font-weight: 500; }
+  .home-title { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 500; line-height: 1.15; margin-bottom: 8px; }
+  .home-sub { font-size: 12px; color: var(--gray-400); line-height: 1.6; max-width: 300px; }
+
+  /* STATS */
+  .home-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 16px 20px 22px; background: var(--black); margin-bottom: 24px; }
+  .stat-pill { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius-sm); padding: 14px 10px; text-align: center; transition: background var(--t); }
+  .stat-pill:hover { background: rgba(255,255,255,0.13); }
+  .stat-pill .num { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; color: var(--white); line-height: 1; }
+  .stat-pill .lbl { font-size: 10px; color: var(--sage-light); margin-top: 5px; line-height: 1.3; letter-spacing: 0.04em; }
+
+  /* QUICK CARDS */
+  .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; padding: 0 20px; }
+  .quick-card { background: var(--white); border-radius: var(--radius); padding: 18px 16px 16px; cursor: pointer; border: 1px solid var(--gray-200); display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow-sm); transition: transform 0.18s ease, box-shadow 0.18s ease; }
+  .quick-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .quick-card:active { transform: scale(0.97); }
+  .qc-top { display: flex; align-items: center; justify-content: space-between; }
+  .qc-icon { width: 36px; height: 36px; background: var(--black); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: var(--sage); }
+  .qc-arrow { color: var(--gray-300); }
+  .qc-title { font-size: 13px; font-weight: 500; color: var(--black); }
+
+  /* ANNOUNCEMENTS */
+  .announcements-list { padding: 0 20px 28px; }
+  .announcement-card { background: var(--white); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 10px; border: 1px solid var(--gray-200); border-left: 3px solid var(--sage); box-shadow: var(--shadow-sm); transition: box-shadow var(--t); }
+  .announcement-card:hover { box-shadow: var(--shadow-md); }
+  .ann-date { font-size: 10px; color: var(--sage-dark); margin-bottom: 5px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+  .ann-title { font-size: 14px; font-weight: 600; margin-bottom: 5px; line-height: 1.3; }
+  .ann-body { font-size: 12px; color: var(--gray-600); line-height: 1.65; }
+
+  /* SOCIAL */
+  .social-row { display: flex; justify-content: center; gap: 14px; padding: 0 20px 28px; }
+
+  /* PAGE HEADER */
+  .page-header { background: var(--black); padding: 22px 20px 18px; color: var(--white); }
+  .page-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 500; margin-bottom: 3px; }
   .page-header p { font-size: 12px; color: var(--gray-400); }
-  .filters-bar { background: var(--white); padding: 12px 16px; display: flex; gap: 8px; overflow-x: auto; border-bottom: 1px solid var(--gray-200); }
+
+  /* FILTERS */
+  .filters-bar { background: var(--white); padding: 12px 20px; display: flex; gap: 8px; overflow-x: auto; border-bottom: 1px solid var(--gray-200); scrollbar-width: none; }
   .filters-bar::-webkit-scrollbar { display: none; }
-  .filter-chip { flex-shrink: 0; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; border: 1px solid var(--gray-200); background: var(--white); color: var(--gray-600); cursor: pointer; }
+  .filter-chip { flex-shrink: 0; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 500; border: 1px solid var(--gray-200); background: var(--white); color: var(--gray-600); cursor: pointer; transition: all var(--t); }
+  .filter-chip:hover { border-color: var(--gray-400); color: var(--black); }
   .filter-chip.active { background: var(--black); color: var(--white); border-color: var(--black); }
-  .search-bar { padding: 12px 16px; background: var(--white); border-bottom: 1px solid var(--gray-200); }
-  .search-input { width: 100%; padding: 10px 14px; border: 1px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 14px; background: var(--gray-100); outline: none; }
-  .transaction-list { padding: 12px 16px; }
-  .tx-card { background: var(--white); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; border: 1px solid var(--gray-200); }
-  .tx-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; cursor: pointer; }
+
+  /* SEARCH */
+  .search-bar { padding: 12px 20px; background: var(--white); border-bottom: 1px solid var(--gray-200); }
+  .search-input { width: 100%; padding: 10px 14px; border: 1px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 14px; background: var(--gray-100); outline: none; font-family: 'DM Sans', sans-serif; transition: border-color var(--t); }
+  .search-input:focus { border-color: var(--sage); }
+  .results-count { font-size: 11px; color: var(--gray-400); padding: 10px 20px 0; letter-spacing: 0.04em; }
+
+  /* TRANSACTION CARDS */
+  .transaction-list { padding: 14px 20px; }
+  .tx-card { background: var(--white); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 10px; border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm); transition: box-shadow var(--t), transform 0.15s ease; }
+  .tx-card:active { transform: scale(0.99); }
+  .tx-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; cursor: pointer; }
   .tx-client { font-size: 15px; font-weight: 500; line-height: 1.2; }
-  .tx-address { font-size: 12px; color: var(--info); margin-top: 4px; text-decoration: none; display: inline-block; font-weight: 500; padding-bottom: 2px; border-bottom: 1px dotted var(--info); cursor: pointer;}
-  .stage-badge { font-size: 10px; font-weight: 500; padding: 4px 10px; border-radius: 20px; white-space: nowrap; margin-left: 8px; }
-  .stage-closed { background: #e8f5e9; color: #2e7d32; } .stage-pending { background: #fff3e0; color: #e65100; }
-  .stage-active { background: #e3f2fd; color: #1565c0; } .stage-lost { background: #fce4ec; color: #880e4f; }
-  .tx-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; cursor: pointer; }
-  .tx-agent { font-size: 11px; color: var(--gray-400); } .tx-meta { font-size: 11px; color: var(--gray-600); font-weight: 500; }
-  
-  /* OVERLAY */
-  .tx-detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; padding: 60px 0 0; }
-  .tx-detail-overlay.open { display: flex; flex-direction: column; }
-  .tx-detail-sheet { background: var(--white); border-radius: 20px 20px 0 0; flex: 1; overflow-y: auto; padding: 20px; position: relative; }
-  .detail-handle { width: 40px; height: 4px; background: var(--gray-200); border-radius: 2px; margin: 0 auto 20px; }
-  .detail-client { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; margin-bottom: 4px; }
-  .detail-address { font-size: 13px; margin-bottom: 16px; }
+  .tx-address { font-size: 12px; color: var(--info); margin-top: 4px; text-decoration: none; display: inline-block; font-weight: 500; padding-bottom: 1px; border-bottom: 1px dotted var(--info); cursor: pointer; }
+  .stage-badge { font-size: 10px; font-weight: 600; padding: 4px 10px; border-radius: 20px; white-space: nowrap; margin-left: 8px; letter-spacing: 0.02em; }
+  .stage-closed { background: #e8f5e9; color: #2e7d32; }
+  .stage-pending { background: #fff3e0; color: #e65100; }
+  .stage-active { background: #e3f2fd; color: #1565c0; }
+  .stage-lost { background: #fce4ec; color: #880e4f; }
+  .tx-bottom { display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding-top: 10px; border-top: 1px solid var(--gray-200); }
+  .tx-agent { font-size: 11px; color: var(--gray-400); }
+  .tx-meta { font-size: 12px; color: var(--black); font-weight: 600; }
+
+  /* DETAIL OVERLAY */
+  .tx-detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0); z-index: 200; padding: 60px 0 0; transition: background 0.25s ease; }
+  .tx-detail-overlay.open { display: flex; flex-direction: column; background: rgba(0,0,0,0.6); }
+  .tx-detail-sheet { background: var(--white); border-radius: 20px 20px 0 0; flex: 1; overflow-y: auto; padding: 24px 20px; position: relative; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.32,0.72,0,1); }
+  .tx-detail-overlay.open .tx-detail-sheet { transform: translateY(0); }
+  .detail-handle { width: 40px; height: 4px; background: var(--gray-200); border-radius: 2px; margin: 0 auto 24px; }
+  .detail-client { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500; margin-bottom: 4px; }
+  .detail-address { font-size: 13px; margin-bottom: 20px; }
   .detail-address a { color: var(--info); text-decoration: none; border-bottom: 1px dotted var(--info); }
-  .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--gray-200); font-size: 13px; }
-  .detail-label { color: var(--gray-400); } .detail-value { font-weight: 500; text-align: right; max-width: 60%; }
-  .close-btn { position: absolute; top: 20px; right: 20px; width: 32px; height: 32px; background: var(--gray-200); border: none; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-  
-  /* DIRECTORY & HEADSHOTS */
-  .agent-grid { padding: 12px 16px; }
-  .agent-card { background: var(--white); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; border: 1px solid var(--gray-200); }
+  .detail-row { display: flex; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--gray-200); font-size: 13px; }
+  .detail-label { color: var(--gray-400); font-size: 12px; }
+  .detail-value { font-weight: 500; text-align: right; max-width: 60%; }
+  .close-btn { position: absolute; top: 20px; right: 20px; width: 32px; height: 32px; background: var(--gray-200); border: none; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background var(--t); }
+  .close-btn:hover { background: var(--gray-300); }
+
+  /* AGENT CARDS */
+  .agent-grid { padding: 14px 20px; }
+  .agent-card { background: var(--white); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm); transition: box-shadow var(--t); }
+  .agent-card:hover { box-shadow: var(--shadow-md); }
   .agent-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--black); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--sage); flex-shrink: 0; overflow: hidden; }
   .agent-avatar img { width: 100%; height: 100%; object-fit: cover; }
   .agent-info { flex: 1; min-width: 0; }
   .agent-name { font-size: 15px; font-weight: 500; }
-  .agent-email { font-size: 11px; color: var(--gray-400); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .agent-role { font-size: 11px; color: var(--sage-dark); margin-top: 2px; font-weight: 500; }
+  .agent-email { font-size: 11px; color: var(--gray-400); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .agent-actions { display: flex; gap: 8px; }
-  .act-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--gray-200); background: var(--gray-100); display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--black); cursor: pointer; }
-  
+  .act-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--gray-200); background: var(--gray-100); display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--black); cursor: pointer; transition: background var(--t), border-color var(--t), color var(--t); }
+  .act-btn:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+
   /* TRAINING & FORMS */
-  .training-section, .forms-section { padding: 16px; }
-  .training-group, .forms-group { margin-bottom: 24px; }
-  .training-group-title, .forms-group-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 500; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--gray-200); }
-  .training-card, .form-link { background: var(--white); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 6px; display: flex; align-items: center; gap: 12px; border: 1px solid var(--gray-200); text-decoration: none; color: inherit; font-size: 13px; }
+  .training-section, .forms-section { padding: 20px; }
+  .training-group, .forms-group { margin-bottom: 28px; }
+  .training-group-title, .forms-group-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 500; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--gray-200); }
+  .training-card, .form-link { background: var(--white); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 14px; border: 1px solid var(--gray-200); text-decoration: none; color: inherit; font-size: 13px; box-shadow: var(--shadow-sm); transition: box-shadow var(--t), transform 0.15s ease; }
+  .training-card:hover, .form-link:hover { box-shadow: var(--shadow-md); transform: translateX(2px); }
   .training-icon { width: 40px; height: 40px; background: var(--gray-100); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--sage-dark); }
-  .empty-state { text-align: center; padding: 40px 20px; color: var(--gray-400); font-size: 13px; }
-  .results-count { font-size: 11px; color: var(--gray-400); padding: 8px 16px 0; letter-spacing: 0.04em; }
-  
-  /* DESKTOP FIX */
-  @media (min-width: 768px) { 
-    body { background: #d1d6d2; } 
-    .main { max-width: 480px; margin: 0 auto; background: var(--gray-100); min-height: 100vh; box-shadow: 0 0 30px rgba(0,0,0,0.1); }
-    .app-header, .bottom-nav, .tx-detail-overlay { max-width: 480px; margin: 0 auto; left: 0; right: 0; } 
+  .link-arrow { margin-left: auto; color: var(--gray-300); flex-shrink: 0; }
+
+  /* SKELETON */
+  .skeleton { background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-100) 50%, var(--gray-200) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+  .skeleton-card { background: var(--white); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 10px; border: 1px solid var(--gray-200); }
+  .skeleton-line { height: 12px; margin-bottom: 8px; }
+  .skeleton-line.w70 { width: 70%; }
+  .skeleton-line.w40 { width: 40%; }
+  .skeleton-line.w25 { width: 25%; height: 10px; margin-top: 4px; }
+
+  /* EMPTY STATE */
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--gray-400); font-size: 13px; line-height: 1.6; }
+
+  /* IFRAME WRAPPERS */
+  .iframe-wrap { padding: 0 20px 28px; }
+  .iframe-wrap iframe { width: 100%; border-radius: var(--radius); border: none; display: block; }
+
+  /* DESKTOP */
+  @media (min-width: 768px) {
+    body { background: #c8cec9; }
+    .main { max-width: 480px; margin: 0 auto; background: var(--gray-100); min-height: 100vh; box-shadow: 0 0 60px rgba(0,0,0,0.15); }
+    .app-header, .bottom-nav, .tx-detail-overlay { max-width: 480px; margin: 0 auto; left: 0; right: 0; }
   }
 </style>
 </head>
@@ -107,18 +187,19 @@
 
 <header class="app-header">
   <div class="header-logo">CRG<span>.</span></div>
-  <div style="display: flex; align-items: center; gap: 12px;">
+  <div class="header-right">
     <div class="header-date" id="headerDate"></div>
-    <button id="refreshBtn" onclick="refreshData()" style="background: transparent; border: none; color: var(--gray-400); cursor: pointer; padding: 4px;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+    <button id="refreshBtn" class="refresh-btn" onclick="refreshData()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
     </button>
   </div>
 </header>
 
 <main class="main">
+
   <div id="page-home" class="page active">
     <div class="home-hero">
-      <div class="home-greeting">Good morning</div>
+      <div class="home-greeting" id="homeGreeting">Welcome</div>
       <div class="home-title">Cobb Realty Group</div>
       <div class="home-sub">Your home base for listings, buyers, contracts, training, and more.</div>
     </div>
@@ -128,12 +209,9 @@
       <div class="stat-pill"><div class="num" id="stat-closed">—</div><div class="lbl">Closed</div></div>
     </div>
 
-    <div class="section-title">Team Video</div>
-    <div style="padding: 0 16px 24px;">
-      <iframe style="width:100%; height:200px; border-radius:var(--radius); border:none;" 
-        src="https://www.youtube.com/embed/6MH8uQLcK60?si=sDmaoWSlpXmo-v4n" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-      </iframe>
+    <div class="section-title" style="margin-top:4px;">Team Video</div>
+    <div class="iframe-wrap">
+      <iframe height="200" loading="lazy" src="https://www.youtube.com/embed/6MH8uQLcK60?si=sDmaoWSlpXmo-v4n" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 
     <div class="section-title">Team Updates</div>
@@ -144,33 +222,45 @@
     <div class="section-title">Quick Access</div>
     <div class="quick-grid">
       <div class="quick-card" onclick="navigate('transactions')">
-        <div class="qc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+        <div class="qc-top">
+          <div class="qc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+          <div class="qc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
         <div class="qc-title">Active Deals</div>
       </div>
       <div class="quick-card" onclick="navigate('directory')">
-        <div class="qc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <div class="qc-top">
+          <div class="qc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+          <div class="qc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
         <div class="qc-title">Team Directory</div>
       </div>
       <div class="quick-card" onclick="navigate('training')">
-        <div class="qc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
+        <div class="qc-top">
+          <div class="qc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
+          <div class="qc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
         <div class="qc-title">Training & SOPs</div>
       </div>
       <div class="quick-card" onclick="navigate('forms')">
-        <div class="qc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <div class="qc-top">
+          <div class="qc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+          <div class="qc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
         <div class="qc-title">Forms & Docs</div>
       </div>
     </div>
 
     <div class="section-title">Company Calendar</div>
-    <div style="padding: 0 16px 24px;">
-      <iframe src="https://calendar.google.com/calendar/embed?src=c_f33122657a99025e777b0b8e88b8a99964039423e596283c13d37c226f16825f%40group.calendar.google.com" style="border:0; width:100%; height:350px; border-radius:var(--radius);" frameborder="0" scrolling="no"></iframe>
+    <div class="iframe-wrap">
+      <iframe loading="lazy" height="350" src="https://calendar.google.com/calendar/embed?src=c_f33122657a99025e777b0b8e88b8a99964039423e596283c13d37c226f16825f%40group.calendar.google.com" frameborder="0" scrolling="no"></iframe>
     </div>
 
-    <div class="section-title" style="text-align: center;">Connect With Us</div>
-    <div style="display: flex; justify-content: center; gap: 16px; padding: 0 16px 24px;">
-      <a href="https://facebook.com" target="_blank" class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
-      <a href="https://instagram.com" target="_blank" class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
-      <a href="https://linkedin.com" target="_blank" class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+    <div class="section-title" style="justify-content:center;">Connect With Us</div>
+    <div class="social-row">
+      <a href="https://facebook.com" target="_blank" class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://instagram.com" target="_blank" class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="https://linkedin.com" target="_blank" class="act-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
     </div>
   </div>
 
@@ -186,7 +276,7 @@
     <div class="page-header"><h1>Agent Directory</h1><p>Cobb Realty Group team</p></div>
     <div class="search-bar"><input type="text" class="search-input" placeholder="Search agents..." id="agentSearch" oninput="filterAgents()"></div>
     <div class="agent-grid" id="agentList"><div class="empty-state">Loading directory...</div></div>
-    <div class="section-title" style="margin: 16px;">Operations & VA Team</div>
+    <div class="section-title" style="margin:4px 0;">Operations & VA Team</div>
     <div class="agent-grid" id="vaList"></div>
   </div>
 
@@ -197,14 +287,16 @@
         <div class="training-group-title">Onboarding</div>
         <a class="training-card" href="#" onclick="return false;">
           <div class="training-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg></div>
-          <div><div style="font-weight:500; font-size:14px;">Getting Started at CRG</div><div style="font-size:12px; color:var(--gray-400);">First-week checklist</div></div>
+          <div style="flex:1"><div style="font-weight:500;font-size:14px;">Getting Started at CRG</div><div style="font-size:12px;color:var(--gray-400);margin-top:2px;">First-week checklist</div></div>
+          <div class="link-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg></div>
         </a>
       </div>
       <div class="training-group">
         <div class="training-group-title">Tools & Systems</div>
         <a class="training-card" href="#" onclick="return false;">
           <div class="training-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div>
-          <div><div style="font-weight:500; font-size:14px;">Google Drive SOP</div><div style="font-size:12px; color:var(--gray-400);">Folder structures</div></div>
+          <div style="flex:1"><div style="font-weight:500;font-size:14px;">Google Drive SOP</div><div style="font-size:12px;color:var(--gray-400);margin-top:2px;">Folder structures</div></div>
+          <div class="link-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg></div>
         </a>
       </div>
     </div>
@@ -217,22 +309,25 @@
         <a class="form-link" href="https://forms.gle/df6HdbvhDQyAFDyY6" target="_blank">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span style="flex:1;">Accepted Offer & Closing Form</span>
+          <div class="link-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg></div>
         </a>
         <a class="form-link" href="https://forms.gle/73fvkEeF1paUSdrp7" target="_blank">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span style="flex:1;">Transaction Update Form</span>
+          <div class="link-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 18l6-6-6-6"/></svg></div>
         </a>
       </div>
     </div>
   </div>
+
 </main>
 
 <nav class="bottom-nav">
-  <button class="nav-item active" onclick="navigate('home')" id="nav-home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Home</button>
-  <button class="nav-item" onclick="navigate('transactions')" id="nav-transactions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg> Deals</button>
-  <button class="nav-item" onclick="navigate('directory')" id="nav-directory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg> Team</button>
-  <button class="nav-item" onclick="navigate('training')" id="nav-training"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg> Training</button>
-  <button class="nav-item" onclick="navigate('forms')" id="nav-forms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Forms</button>
+  <button class="nav-item active" onclick="navigate('home')" id="nav-home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</button>
+  <button class="nav-item" onclick="navigate('transactions')" id="nav-transactions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>Deals</button>
+  <button class="nav-item" onclick="navigate('directory')" id="nav-directory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Team</button>
+  <button class="nav-item" onclick="navigate('training')" id="nav-training"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>Training</button>
+  <button class="nav-item" onclick="navigate('forms')" id="nav-forms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Forms</button>
 </nav>
 
 <div class="tx-detail-overlay" id="txDetail" onclick="closeDetail(event)">
@@ -246,14 +341,10 @@
 </div>
 
 <script>
-// ==========================================
-// Your live App Script URL is safely pasted here:
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyeXOuaukZcG-k5klYCQGo_zDQzCV1iSM9PljAqddBo8CxhO_3xxmXUnUnCZREaAoZ13Q/exec";
-// ==========================================
 
 let transactions = [], filteredTx = [], agents = [], announcements = [];
 
-// Your VA Dropbox links are safely installed inside the quotes here!
 const vaTeam = [
   { name: "Cara Flores", role: "Operations Manager", email: "cara@mycobbrealty.com", photo: "https://www.dropbox.com/scl/fi/xd8n13k0tbp1crxws3ces/Cara.png?rlkey=pusc88acd8psx7dl0fnyju55j&st=2t3sc3q2&dl=0", folder: "" },
   { name: "Mica Ancajas", role: "Transaction Coordinator", email: "mica@tycobbrealty.com", photo: "https://www.dropbox.com/scl/fi/mdyqsy4girhlxj3fsexye/Mica.png?rlkey=vdy2pwpo6gmwxj3um0th11xrb&st=9zp3mdnv&dl=0", folder: "" },
@@ -261,45 +352,56 @@ const vaTeam = [
   { name: "Jessan Cinco", role: "Social Media Manager", email: "social@mycobbrealty.com", photo: "https://www.dropbox.com/scl/fi/tmuinfv15a0wxi7qcdtdh/Jessan.png?rlkey=sm96nx7bw2eoyaq9qq00g4hsg&st=2weo7lft&dl=0", folder: "" }
 ];
 
+function setGreeting() {
+  const h = new Date().getHours();
+  const el = document.getElementById('homeGreeting');
+  if (el) el.textContent = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+}
+
 function formatImageUrl(url) {
   if (!url) return '';
-  let formattedUrl = String(url).trim();
-  if (formattedUrl.includes('dropbox.com')) {
-    formattedUrl = formattedUrl.replace('dl=0', 'raw=1');
-    if (!formattedUrl.includes('raw=1') && !formattedUrl.includes('dl=1')) {
-      formattedUrl += (formattedUrl.includes('?') ? '&' : '?') + 'raw=1';
-    }
-  } else if (formattedUrl.includes('drive.google.com/file/d/')) {
-    const match = formattedUrl.match(/\/d\/(.*?)\//);
-    if (match && match[1]) formattedUrl = 'https://drive.google.com/uc?export=view&id=' + match[1];
+  let f = String(url).trim();
+  if (f.includes('dropbox.com')) {
+    f = f.replace('dl=0', 'raw=1');
+    if (!f.includes('raw=1') && !f.includes('dl=1')) f += (f.includes('?') ? '&' : '?') + 'raw=1';
+  } else if (f.includes('drive.google.com/file/d/')) {
+    const m = f.match(/\/d\/(.*?)\//);
+    if (m && m[1]) f = 'https://drive.google.com/uc?export=view&id=' + m[1];
   }
-  return formattedUrl;
+  return f;
+}
+
+function skeletonCards(n) {
+  return Array.from({length: n}, () => `<div class="skeleton-card"><div class="skeleton skeleton-line w70"></div><div class="skeleton skeleton-line w40"></div><div class="skeleton skeleton-line w25"></div></div>`).join('');
 }
 
 async function refreshData() {
-  const refreshBtn = document.getElementById('refreshBtn'), txList = document.getElementById('txList');
-  if (refreshBtn) refreshBtn.style.opacity = '0.5';
-  if (txList.innerHTML === '' || txList.innerHTML.includes('empty-state')) txList.innerHTML = '<div class="empty-state">Loading live data...</div>';
+  const btn = document.getElementById('refreshBtn');
+  const txList = document.getElementById('txList');
+  if (btn) btn.classList.add('spinning');
+  txList.innerHTML = skeletonCards(4);
 
   try {
     const response = await fetch(WEB_APP_URL, { cache: "no-store" });
     const data = await response.json();
-    transactions = data.transactions || []; announcements = data.announcements || [];
+    transactions = data.transactions || [];
+    announcements = data.announcements || [];
     const namesToHide = ["Cara", "Micaella", "Melrose", "Jessan"];
-    agents = (data.agents || []).filter(a => !namesToHide.some(vaName => String(a.Name||"").includes(vaName)));
-    
+    agents = (data.agents || []).filter(a => !namesToHide.some(v => String(a.Name||"").includes(v)));
     calcStats(); filterTransactions(); renderAgents(agents); renderAnnouncements(announcements);
   } catch (error) {
-    console.error(error); txList.innerHTML = '<div class="empty-state" style="color:var(--danger)">Error loading data. Check your Web App URL.</div>';
+    console.error(error);
+    txList.innerHTML = '<div class="empty-state" style="color:var(--danger)">Error loading data. Check your Web App URL.</div>';
   } finally {
-    if (refreshBtn) refreshBtn.style.opacity = '1';
+    if (btn) btn.classList.remove('spinning');
   }
 }
 
-window.onload = function() { renderVA(); refreshData(); };
+window.onload = function() { setGreeting(); renderVA(); refreshData(); };
 
 function formatFolderLink(rawLink) {
-  let link = String(rawLink || '').trim(); if (link === 'null' || link === '') return '#';
+  let link = String(rawLink || '').trim();
+  if (link === 'null' || link === '') return '#';
   if (!link.startsWith('http://') && !link.startsWith('https://')) link = 'https://' + link;
   return link;
 }
@@ -308,75 +410,101 @@ function openDetail(index) {
   const t = filteredTx[index]; if (!t) return;
   const propertyAddress = String(t.Address || t.PropertyAddress || '');
   const zillowLink = propertyAddress ? 'https://www.zillow.com/homes/' + encodeURIComponent(propertyAddress) : '#';
-  
   document.getElementById('d-client').textContent = t.ClientName || t.Client || 'Unknown';
-  document.getElementById('d-address').innerHTML = zillowLink !== '#' ? `<a onclick="window.open('${zillowLink}', '_blank'); return false;" class="tx-address">${propertyAddress}</a>` : propertyAddress;
+  document.getElementById('d-address').innerHTML = zillowLink !== '#' ? `<a onclick="window.open('${zillowLink}','_blank');return false;" class="tx-address">${propertyAddress}</a>` : propertyAddress;
   document.getElementById('d-rows').innerHTML = `
-    <div class="detail-row"><span class="detail-label">Agent</span><span class="detail-value">${t.AgentName || t.Agent || '—'}</span></div>
-    <div class="detail-row"><span class="detail-label">Stage</span><span class="detail-value">${t.Stage || t.Status || '—'}</span></div>
-    <div class="detail-row"><span class="detail-label">Price</span><span class="detail-value">${t.Price || '—'}</span></div>
-    <div class="detail-row"><span class="detail-label">Zillow</span><span class="detail-value">${zillowLink !== '#' ? `<a onclick="window.open('${zillowLink}', '_blank'); return false;" style="color:var(--info); cursor:pointer;">View Property</a>` : '—'}</span></div>
+    <div class="detail-row"><span class="detail-label">Agent</span><span class="detail-value">${t.AgentName||t.Agent||'—'}</span></div>
+    <div class="detail-row"><span class="detail-label">Stage</span><span class="detail-value">${t.Stage||t.Status||'—'}</span></div>
+    <div class="detail-row"><span class="detail-label">Price</span><span class="detail-value">${t.Price||'—'}</span></div>
+    <div class="detail-row"><span class="detail-label">Zillow</span><span class="detail-value">${zillowLink!=='#'?`<a onclick="window.open('${zillowLink}','_blank');return false;" style="color:var(--info);cursor:pointer;">View Property</a>`:'—'}</span></div>
   `;
   document.getElementById('txDetail').classList.add('open');
 }
 
-function closeDetail(e) { if (e && e.target !== document.getElementById('txDetail') && e.target.className !== 'close-btn') return; document.getElementById('txDetail').classList.remove('open'); }
+function closeDetail(e) {
+  if (e && e.target !== document.getElementById('txDetail') && e.target.className !== 'close-btn') return;
+  document.getElementById('txDetail').classList.remove('open');
+}
 
 const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const now = new Date(); document.getElementById('headerDate').textContent = `${days[now.getDay()]} ${months[now.getMonth()]} ${now.getDate()}`;
+const now = new Date();
+document.getElementById('headerDate').textContent = `${days[now.getDay()]} ${months[now.getMonth()]} ${now.getDate()}`;
 
-function navigate(page) { document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active')); document.getElementById('page-' + page).classList.add('active'); document.getElementById('nav-' + page).classList.add('active'); window.scrollTo(0, 0); }
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => { p.classList.remove('active','visible'); });
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const el = document.getElementById('page-' + page);
+  el.classList.add('active');
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+  document.getElementById('nav-' + page).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+requestAnimationFrame(() => requestAnimationFrame(() => {
+  const active = document.querySelector('.page.active');
+  if (active) active.classList.add('visible');
+}));
 
 function getStageBadge(stage) {
-  const s = String(stage || '').toLowerCase();
+  const s = String(stage||'').toLowerCase();
   if (s.includes('closed') && !s.includes('coming')) return {cls:'stage-closed',label:'Closed'};
   if (s.includes('pending') || s.includes('under contract')) return {cls:'stage-pending',label:'Pending'};
   if (s.includes('lost') || s.includes('withdrawn')) return {cls:'stage-lost',label:'Lost'};
-  return {cls:'stage-active',label:stage || 'Active'};
+  return {cls:'stage-active',label:stage||'Active'};
 }
 
 function calcStats() {
-  let a = 0, p = 0, c = 0;
+  let a=0, p=0, c=0;
   transactions.forEach(t => {
-    const s = String(t.Stage || t.Status || '').toLowerCase();
-    if (s.includes('closed') && !s.includes('coming')) c++; else if (s.includes('pending') || s.includes('under contract')) p++; else if (!s.includes('lost') && !s.includes('withdrawn')) a++;
+    const s = String(t.Stage||t.Status||'').toLowerCase();
+    if (s.includes('closed') && !s.includes('coming')) c++;
+    else if (s.includes('pending') || s.includes('under contract')) p++;
+    else if (!s.includes('lost') && !s.includes('withdrawn')) a++;
   });
-  document.getElementById('stat-active').textContent = a; document.getElementById('stat-pending').textContent = p; document.getElementById('stat-closed').textContent = c;
+  document.getElementById('stat-active').textContent = a;
+  document.getElementById('stat-pending').textContent = p;
+  document.getElementById('stat-closed').textContent = c;
 }
 
-const stages = ['All', 'Active', 'Pending', 'Closed', 'Lost']; let activeFilter = 'All'; const filtersBar = document.getElementById('stageFilters');
+const stages = ['All','Active','Pending','Closed','Lost'];
+let activeFilter = 'All';
+const filtersBar = document.getElementById('stageFilters');
 stages.forEach(s => {
-  const chip = document.createElement('button'); chip.className = 'filter-chip' + (s === 'All' ? ' active' : ''); chip.textContent = s;
-  chip.onclick = () => { activeFilter = s; document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active')); chip.classList.add('active'); filterTransactions(); };
+  const chip = document.createElement('button');
+  chip.className = 'filter-chip' + (s==='All' ? ' active' : '');
+  chip.textContent = s;
+  chip.onclick = () => { activeFilter=s; document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active')); chip.classList.add('active'); filterTransactions(); };
   filtersBar.appendChild(chip);
 });
 
 function filterTransactions() {
   const q = document.getElementById('txSearch').value.toLowerCase();
   filteredTx = transactions.filter(t => {
-    const stage = String(t.Stage || t.Status || '').toLowerCase();
+    const stage = String(t.Stage||t.Status||'').toLowerCase();
     const matchQ = !q || String(t.ClientName||t.Client||'').toLowerCase().includes(q) || String(t.Address||'').toLowerCase().includes(q) || String(t.AgentName||t.Agent||'').toLowerCase().includes(q);
     let matchS = true;
-    if (activeFilter === 'Active') matchS = !stage.includes('closed') && !stage.includes('pending') && !stage.includes('lost') && !stage.includes('withdrawn');
-    else if (activeFilter === 'Pending') matchS = stage.includes('pending') || stage.includes('under contract');
-    else if (activeFilter === 'Closed') matchS = stage.includes('closed');
-    else if (activeFilter === 'Lost') matchS = stage.includes('lost') || stage.includes('withdrawn');
+    if (activeFilter==='Active') matchS = !stage.includes('closed') && !stage.includes('pending') && !stage.includes('lost') && !stage.includes('withdrawn');
+    else if (activeFilter==='Pending') matchS = stage.includes('pending') || stage.includes('under contract');
+    else if (activeFilter==='Closed') matchS = stage.includes('closed');
+    else if (activeFilter==='Lost') matchS = stage.includes('lost') || stage.includes('withdrawn');
     return matchQ && matchS;
   });
   renderTransactions();
 }
 
 function renderTransactions() {
-  const list = document.getElementById('txList'); list.innerHTML = ''; document.getElementById('txCount').textContent = filteredTx.length + ' results';
-  if (filteredTx.length === 0) return list.innerHTML = '<div class="empty-state">No transactions found</div>';
-  filteredTx.forEach((t, i) => {
-    const propertyAddress = String(t.Address || t.PropertyAddress || '');
-    const zillowLink = propertyAddress ? 'https://www.zillow.com/homes/' + encodeURIComponent(propertyAddress) : '#';
-    const b = getStageBadge(t.Stage || t.Status);
-    const cName = t.ClientName || t.Client || 'Unknown Client', aName = t.AgentName || t.Agent || 'Agent';
+  const list = document.getElementById('txList');
+  list.innerHTML = '';
+  document.getElementById('txCount').textContent = filteredTx.length + ' results';
+  if (filteredTx.length===0) return list.innerHTML = '<div class="empty-state">No transactions found</div>';
+  filteredTx.forEach((t,i) => {
+    const propertyAddress = String(t.Address||t.PropertyAddress||'');
+    const zillowLink = propertyAddress ? 'https://www.zillow.com/homes/'+encodeURIComponent(propertyAddress) : '#';
+    const b = getStageBadge(t.Stage||t.Status);
+    const cName = t.ClientName||t.Client||'Unknown Client', aName = t.AgentName||t.Agent||'Agent';
     const shortAgent = String(aName).split(' ')[0];
     const card = document.createElement('div'); card.className = 'tx-card';
-    card.innerHTML = `<div class="tx-top"><div><div class="tx-client" onclick="openDetail(${i})">${cName}</div>${zillowLink !== '#' ? `<a onclick="window.open('${zillowLink}', '_blank'); return false;" class="tx-address">${propertyAddress}</a>` : `<div class="tx-address" style="color:var(--gray-600); border:none;" onclick="openDetail(${i})">${propertyAddress}</div>`}</div><span class="stage-badge ${b.cls}" onclick="openDetail(${i})">${b.label}</span></div><div class="tx-bottom" onclick="openDetail(${i})"><div class="tx-agent">${shortAgent}</div><div class="tx-meta">${t.Price||''}</div></div>`;
+    card.innerHTML = `<div class="tx-top"><div><div class="tx-client" onclick="openDetail(${i})">${cName}</div>${zillowLink!=='#'?`<a onclick="window.open('${zillowLink}','_blank');return false;" class="tx-address">${propertyAddress}</a>`:`<div style="font-size:12px;color:var(--gray-600);margin-top:4px;">${propertyAddress}</div>`}</div><span class="stage-badge ${b.cls}" onclick="openDetail(${i})">${b.label}</span></div><div class="tx-bottom" onclick="openDetail(${i})"><div class="tx-agent">${shortAgent}</div><div class="tx-meta">${t.Price||''}</div></div>`;
     list.appendChild(card);
   });
 }
@@ -384,15 +512,15 @@ function renderTransactions() {
 function renderVA() {
   const el = document.getElementById('vaList'); el.innerHTML = '';
   vaTeam.forEach(v => {
-    const fixedPhoto = formatImageUrl(v.photo);
-    const avatar = fixedPhoto ? `<img src="${fixedPhoto}">` : String(v.name).charAt(0);
+    const photo = formatImageUrl(v.photo);
+    const avatar = photo ? `<img src="${photo}">` : String(v.name).charAt(0);
     const fLink = formatFolderLink(v.folder);
     const card = document.createElement('div'); card.className = 'agent-card';
     card.innerHTML = `
       <div class="agent-avatar">${avatar}</div>
-      <div class="agent-info"><div class="agent-name">${v.name}</div><div class="agent-email">${v.role}</div></div>
+      <div class="agent-info"><div class="agent-name">${v.name}</div><div class="agent-role">${v.role}</div></div>
       <div class="agent-actions">
-        ${fLink !== '#' ? `<a class="act-btn" onclick="window.open('${fLink}', '_blank'); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></a>` : ''}
+        ${fLink!=='#'?`<a class="act-btn" onclick="window.open('${fLink}','_blank');return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></a>`:''}
         <a class="act-btn" href="mailto:${v.email}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>
       </div>`;
     el.appendChild(card);
@@ -401,15 +529,37 @@ function renderVA() {
 
 function renderAgents(list) {
   const el = document.getElementById('agentList'); el.innerHTML = '';
-  if(list.length === 0) return el.innerHTML = '<div class="empty-state">No agents found.</div>';
+  if (list.length===0) return el.innerHTML = '<div class="empty-state">No agents found.</div>';
   list.forEach(a => {
-    let photoUrl = a.PhotoURL || a.Photo || a.PhotoUrl || '';
-    photoUrl = formatImageUrl(photoUrl);
-    const avatarHTML = photoUrl !== '' ? `<img src="${photoUrl}">` : String(a.Name||'A').split(' ').map(n=>n[0]).join('').substring(0,2);
-    const fLink = formatFolderLink(a.DriveLink || a.FolderLink || a.FilesLink);
+    const photoUrl = formatImageUrl(a.PhotoURL||a.Photo||a.PhotoUrl||'');
+    const avatarHTML = photoUrl ? `<img src="${photoUrl}">` : String(a.Name||'A').split(' ').map(n=>n[0]).join('').substring(0,2);
+    const fLink = formatFolderLink(a.DriveLink||a.FolderLink||a.FilesLink);
     const card = document.createElement('div'); card.className = 'agent-card';
     card.innerHTML = `
       <div class="agent-avatar">${avatarHTML}</div>
       <div class="agent-info"><div class="agent-name">${a.Name||''}</div><div class="agent-email">${a.Email||''}</div></div>
       <div class="agent-actions">
-        ${fLink !== '#' ? `<a class="act-btn" onclick="window.open('${fLink}', '_blank'); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0
+        ${fLink!=='#'?`<a class="act-btn" onclick="window.open('${fLink}','_blank');return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></a>`:''}
+        <a class="act-btn" href="mailto:${a.Email}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>
+      </div>`;
+    el.appendChild(card);
+  });
+}
+
+function filterAgents() {
+  const q = document.getElementById('agentSearch').value.toLowerCase();
+  renderAgents(agents.filter(a => !q || String(a.Name||'').toLowerCase().includes(q) || String(a.Email||'').toLowerCase().includes(q)));
+}
+
+function renderAnnouncements(list) {
+  const el = document.getElementById('announcementsList'); el.innerHTML = '';
+  if (!list || list.length===0) return el.innerHTML = '<div class="empty-state">No announcements at this time.</div>';
+  list.forEach(ann => {
+    const card = document.createElement('div'); card.className = 'announcement-card';
+    card.innerHTML = `<div class="ann-date">${ann.Date||''}</div><div class="ann-title">${ann.Title||ann.Subject||''}</div><div class="ann-body">${ann.Body||ann.Message||ann.Content||''}</div>`;
+    el.appendChild(card);
+  });
+}
+</script>
+</body>
+</html>
