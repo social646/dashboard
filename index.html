@@ -46,7 +46,7 @@
   /* LAYOUT */
   .main { padding-top: var(--header-height); padding-bottom: calc(var(--nav-height) + 20px); min-height: 100vh; }
   .page { display: none; opacity: 0; transform: translateY(8px); transition: opacity 0.22s ease, transform 0.22s ease; }
-  .page.active { display: block; }
+  .page.active { display: block; opacity: 1; transform: translateY(0); }
   .page.visible { opacity: 1; transform: translateY(0); }
 
   /* SECTION TITLE */
@@ -197,7 +197,7 @@
 
 <main class="main">
 
-  <div id="page-home" class="page active">
+  <div id="page-home" class="page active visible">
     <div class="home-hero">
       <div class="home-greeting" id="homeGreeting">Welcome</div>
       <div class="home-title">Cobb Realty Group</div>
@@ -534,7 +534,39 @@ function renderAgents(list) {
     const photoUrl = formatImageUrl(a.PhotoURL||a.Photo||a.PhotoUrl||'');
     const avatarHTML = photoUrl ? `<img src="${photoUrl}">` : String(a.Name||'A').split(' ').map(n=>n[0]).join('').substring(0,2);
     const fLink = formatFolderLink(a.DriveLink||a.FolderLink||a.FilesLink);
+    const phone = String(a.Phone||a.PhoneNumber||'').trim();
     const card = document.createElement('div'); card.className = 'agent-card';
     card.innerHTML = `
       <div class="agent-avatar">${avatarHTML}</div>
-      <div class="agent-info"><div class="agent-name">${a.Name||''}</div><div class="agent-email
+      <div class="agent-info"><div class="agent-name">${a.Name||''}</div><div class="agent-email">${a.Email||''}</div></div>
+      <div class="agent-actions">
+        ${fLink!=='#'?`<a class="act-btn" onclick="window.open('${fLink}','_blank');return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></a>`:''}
+        ${phone?`<a class="act-btn" href="tel:${phone}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>`:''}
+        <a class="act-btn" href="mailto:${a.Email}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>
+      </div>`;
+    el.appendChild(card);
+  });
+}
+
+function filterAgents() {
+  const q = document.getElementById('agentSearch').value.toLowerCase();
+  renderAgents(agents.filter(a => !q || String(a.Name||'').toLowerCase().includes(q) || String(a.Email||'').toLowerCase().includes(q)));
+}
+
+function renderAnnouncements(list) {
+  const el = document.getElementById('announcementsList'); el.innerHTML = '';
+  if (!list || list.length===0) return el.innerHTML = '<div class="empty-state">No announcements at this time.</div>';
+  list.forEach(ann => {
+    const rawDate = String(ann.Date||'').trim();
+    const dateHTML = rawDate && rawDate !== 'null' ? `<div class="ann-date">${rawDate}</div>` : '';
+    const title = ann.Title||ann.Subject||'';
+    const body = ann.Body||ann.Message||ann.Content||'';
+    if (!title && !body) return;
+    const card = document.createElement('div'); card.className = 'announcement-card';
+    card.innerHTML = `${dateHTML}<div class="ann-title">${title}</div><div class="ann-body">${body}</div>`;
+    el.appendChild(card);
+  });
+}
+</script>
+</body>
+</html>
